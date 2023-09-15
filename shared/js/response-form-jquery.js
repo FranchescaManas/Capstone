@@ -63,7 +63,11 @@ $(document).ready(function(){
                 : null;
 
             if (questionType) {
+<<<<<<< HEAD
 
+=======
+                
+>>>>>>> db2bacca1cb8e82f204f3fab1b337e136a461f0c
                 formData.response.push({
                     question_type: questionType,
                     question_id: $(this).attr('id'),
@@ -115,6 +119,7 @@ $(document).ready(function(){
         } else if (groupElement.hasClass('time')) {
             response.time_response = groupElement.find('input[type="time"]').val();
         } else if (groupElement.hasClass('scale')) {
+<<<<<<< HEAD
             //instead of words, use numbers for quantification
             response.scale_responses = groupElement.find('.scale-tr').map(function() {
                 return getScaleResponses($(this));
@@ -122,6 +127,16 @@ $(document).ready(function(){
             ).get();
 
 
+=======
+            // //instead of words, use numbers for quantification
+            response.scale_responses = groupElement.find('.scale-tr').slice(1).map(function() {
+                return getScaleResponses($(this));
+            }
+            ).get();
+            // console.log(response.scale_responses);
+
+            
+>>>>>>> db2bacca1cb8e82f204f3fab1b337e136a461f0c
             var uniqueScaleLabels = [];
             groupElement.find('.scale-th.text-center').each(function() {
                 var label = $(this).text();
@@ -133,17 +148,36 @@ $(document).ready(function(){
             
             var labelToNumeric = {};
             for (var i = uniqueScaleLabels.length - 1, j = 1; i >= 0; i--, j++) {
+<<<<<<< HEAD
                 labelToNumeric[uniqueScaleLabels[i]] = j;
             }
 
             response.scale_responses = response.scale_responses.map(function(scaleResponse) {
                 var quantifiedResponse = {};
+=======
+                labelToNumeric[uniqueScaleLabels[i]] = j.toString();
+                // console.log(uniqueScaleLabels[i] + ' ' + j);
+            }
+            // remove the empty array in the first array
+            
+            response.scale_responses = response.scale_responses.map(function(scaleResponse) {
+                var quantifiedResponse = {};
+                
+>>>>>>> db2bacca1cb8e82f204f3fab1b337e136a461f0c
                 for (var statement in scaleResponse) {
                     var wordResponse = scaleResponse[statement];
                     var numericResponse = labelToNumeric[wordResponse] || null; // Map words to numbers
                     quantifiedResponse[statement] = numericResponse;
+<<<<<<< HEAD
                 }
                 return quantifiedResponse;
+=======
+                    // console.log(quantifiedResponse[statement]);
+                }
+                return quantifiedResponse;
+                // console.log(quantifiedResponse);
+
+>>>>>>> db2bacca1cb8e82f204f3fab1b337e136a461f0c
             });
 
 

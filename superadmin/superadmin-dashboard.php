@@ -47,7 +47,10 @@ $studentCount = $studentCount->num_rows;
                     if($row['start_date'] === null || $row['end_date'] === null){
                         $date = "Not Scheduled";
                     }else{
-                        $date = $row['start_date'] .' ' . $row['end_date'];
+                        //format the date to be readable
+                        $start_date = date_create($row['start_date']);
+                        $end_date = date_create($row['end_date']);
+                        $date = $start_date->format('M d, Y') .' - ' . $end_date->format('M d, Y');
                     }
                 ?>
                 <!-- TODO: FORMAT THE DATE -->
@@ -67,9 +70,9 @@ $studentCount = $studentCount->num_rows;
     <summary class="summary-container d-flex flex-column">
         <h1>SUMMARY</h1>
         <div class="summary-score">
-            <h1>{{Score}}</h1>
+            <h1><?= $score = getScaleOverall(); ?></h1>
             <p>OVERALL RATING</p>
-            <?php echo $score = getScaleOverall(); ?>
+            
         </div>
     </summary>
 </main>

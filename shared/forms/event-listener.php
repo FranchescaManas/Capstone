@@ -1,8 +1,8 @@
 <?php
 include '../shared-functions.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['submit'])) {
         // print_r($_POST);
         $action = $_POST['submit'];
@@ -22,11 +22,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             certificateAddUpdate($_POST);
             header('Location:' . $_SERVER['HTTP_REFERER']);
-            ;
             exit;
+        }else if($action === 'close form') {
+            $conn = connection();
+            $sql = "UPDATE `form` SET `start_date`= NULL,`end_date`= NULL, is_open = 0";
+
+            $result = $conn->query($sql);
+            if($result){
+                header('Location:' . $_SERVER['HTTP_REFERER']);
+                ;
+                exit;
+            }else{
+                $conn->error;
+            }
+
         }
     } else {
-
 
         if (isset($_POST['certData'])) {
             $certData = json_decode($_POST['certData'], true);
@@ -65,6 +76,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // print_r($formData);
                 } else if ($action === 'update permission') {
                     updatePermission($formData);
+                }else if ($action === 'update schedule') {
+                    updateSchedule($formData);
+                    echo "success";
                 }
                 // TODO: put the success prompt in the ajax if query works
                 echo "success";
@@ -74,6 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // print_r($formData);
                 } else if ($action === 'update schedule') {
                     updateSchedule($formData);
+                    echo "success";
                 }
             }
         }

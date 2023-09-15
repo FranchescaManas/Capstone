@@ -1,3 +1,16 @@
+<?php
+
+$facultyCount = facultyData();
+$studentCount = studentData();
+$submissions = submissionMetric();
+$formCount = formCount();
+
+
+$facultyCount = $facultyCount->num_rows;
+$studentCount = $studentCount->num_rows;
+
+
+?>
 <main class="d-flex w-100">
     <section class="page-container">
 
@@ -7,20 +20,20 @@
 
         <section class="flex-between flex-wrap">
             <div class="score-card">
-                <h1>{{#}}</h1>
+                <h1><?= $facultyCount?></h1>
                 <p>No. of Faculty</p>
             </div>
             <div class="score-card">
-                <h1>{{#}}</h1>
+                <h1><?= $studentCount?></h1>
                 <p>No. of Students</p>
             </div>
             <div class="score-card">
-                <h1>{{#}}</h1>
-                <p>{{data}}</p>
+                <h1><?= $submissions?></h1>
+                <p>Submission Metrics</p>
             </div>
             <div class="score-card">
-                <h1>{{#}}</h1>
-                <p>{{data}}</p>
+                <h1><?= $formCount?></h1>
+                <p>No. of Forms</p>
             </div>
 
             <div class="form-schedule-card">
@@ -34,7 +47,10 @@
                     if($row['start_date'] === null || $row['end_date'] === null){
                         $date = "Not Scheduled";
                     }else{
-                        $date = $row['start_date'] .' ' . $row['end_date'];
+                        //format the date to be readable
+                        $start_date = date_create($row['start_date']);
+                        $end_date = date_create($row['end_date']);
+                        $date = $start_date->format('M d, Y') .' - ' . $end_date->format('M d, Y');
                     }
                 ?>
                 <!-- TODO: FORMAT THE DATE -->
@@ -54,8 +70,9 @@
     <summary class="summary-container d-flex flex-column">
         <h1>SUMMARY</h1>
         <div class="summary-score">
-            <h1>{{Score}}</h1>
+            <h1><?= $score = getScaleOverall(); ?></h1>
             <p>OVERALL RATING</p>
+            
         </div>
     </summary>
 </main>

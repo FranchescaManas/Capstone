@@ -1,4 +1,4 @@
-<!-- <?php
+<?php
 include_once $_SERVER['DOCUMENT_ROOT'] . '/capstone2/shared/connection.php';
 
 function logout()
@@ -16,10 +16,8 @@ function getUsername()
 function getRole()
 {
     return $_SESSION['role'];
-}
-function insertResponse($role, $formData)
+}function insertResponse($role, $formData)
 {
-    // print_r($formData);
     $conn = connection();
     if (is_array($formData['form_id'])) {
         $formID = $formData['form_id'][0];
@@ -33,62 +31,61 @@ function insertResponse($role, $formData)
 
     $responseSQL = "INSERT INTO form_response (`form_id`, `user_id`, `question_id`, `response_value`, `response_type`) VALUES ";
 
-    $values = array();
-
+    // Handle different question types and their respective response values
     foreach ($responses as $response) {
         $questionID = $response['question_id'];
         $responseValue = $response['response_value'];
         $questionType = $response['question_type'];
 
-        $value = '';
+        $response = '';
 
-        // Handle different question types and their respective response values
         switch ($questionType) {
             case 'choice':
-                $value = $responseValue['selected_choice'];
+                $response = json_encode(['value' => $responseValue['selected_choice']]);
                 break;
             case 'dropdown':
-                $value = $responseValue['selected_option'];
+                $response = json_encode(['value' => $responseValue['selected_option']]);
                 break;
             case 'date':
             case 'time':
             case 'textbox':
             case 'paragraph':
                 // Format and escape the string
-                $value = mysqli_real_escape_string($conn, $responseValue[$questionType . '_response']);
+                $response = json_encode(['value' => mysqli_real_escape_string($conn, $responseValue[$questionType . '_response'])]);
                 break;
             case 'scale':
-                // Format and escape the string
-                $value = mysqli_real_escape_string($conn, json_encode($responseValue['scale_responses']));
+                // Encode the value as JSON
+                $response = json_encode(['value' => $responseValue['scale_responses']]);
                 break;
             default:
                 // Handle unknown question types
                 break;
         }
 
+        $response = mysqli_real_escape_string($conn, $response);
+
         // Prepare the SQL statement
-        $values[] = "($formID, $userID, $questionID, '$value', '$questionType')";
+        $values[] = "($formID, $userID, $questionID, '$response', '$questionType')";
     }
 
     $responseSQL .= implode(",", $values);
+    // echo $responseSQL;
 
     if ($conn->query($responseSQL) !== TRUE) {
         echo "Error: " . $responseSQL . "<br>" . $conn->error;
         return; // Return an error indicator
-    }else{
+    } else {
         $sql = "INSERT INTO evaluation (`evaluator_id`, `target_id`, `form_id`, `eval_date`)
         VALUES ($userID, $targetID, $formID, '$eval_date')";
-    
+
         if ($conn->query($sql) !== TRUE) {
             echo "Error: " . $sql . "<br>" . $conn->error;
             return; // Return an error indicator
         }
-    
+
         echo "success";
         $conn->close();
     }
-
-    
 }
 
 
@@ -534,16 +531,19 @@ function updatePermission($permissionData)
 
         if ($result->num_rows > 0) {
             // Role already has permission entry, so update it
-            $updatePermissionSQL = "UPDATE form_permission SET can_access = $canAccess, can_modify = $canModify WHERE form_id = $formID AND `role` = '$respondent'";
-            if ($conn->query($updatePermissionSQL) !== TRUE) {
-                echo "Error updating permission: " . $conn->error;
+            if($canAccess === 0 && $canModify === 0 ){
+                //if access is removed for both, delete from permission table
+                $deletePermissionSQL = "DELETE FROM form_permission WHERE form_id = $formID AND `role` = '$respondent'";
+                if ($conn->query($deletePermissionSQL) !== TRUE) {
+                    echo "Error deleting permission: " . $conn->error;
+                }
+            }else{
+                $updatePermissionSQL = "UPDATE form_permission SET can_access = $canAccess, can_modify = $canModify WHERE form_id = $formID AND `role` = '$respondent'";
+                if ($conn->query($updatePermissionSQL) !== TRUE) {
+                    echo "Error updating permission: " . $conn->error;
+                }
             }
-        } else if($canAccess === 0 && $canModify){
-            //if access is removed for both, delete from permission table
-            $deletePermissionSQL = "DELETE FROM form_permission WHERE form_id = $formID AND `role` = '$respondent'";
-            if ($conn->query($deletePermissionSQL) !== TRUE) {
-                echo "Error deleting permission: " . $conn->error;
-            }
+
         } 
         else {
             // Role doesn't have permission entry, so insert a new one
@@ -807,42 +807,74 @@ function getScaleOverall() {
     $totalScore = 0;
     $totalResponses = 0;
 
-    while ($row = $result->fetch_assoc()) {
-        $scaleResponses = json_decode($row['response_value'], true);
-        $scaleValues = $scaleResponses['scale_responses'];
-
-        // Loop through the scale values and calculate the score for this response
-        $highestScore = count($scaleValues);
-        $score = 0;
-
-        foreach ($scaleValues as $scaleValue) {
-            $score += $scaleValue * $highestScore;
-            $highestScore--;
+    while($row = $result->fetch_assoc()) {
+        // get all the scale responses from the json "value" key
+        $scaleResponses = json_decode($row['response_value'], true)['value'];
+        // print_r($scaleResponses);
+        //iterate through the nested json array
+        foreach($scaleResponses as $scaleResponse) {
+            foreach($scaleResponse as $key => $value){
+                $totalScore += $value;
+                $totalResponses++;
+            }
         }
-
-        $totalScore += $score;
-        $totalResponses++;
-
-        // Echo the process for this response
-        echo "Processed response ID: {$row['response_id']}, Score: $score<br>";
     }
 
-    // Calculate the average score
-    if ($totalResponses > 0) {
-        $average = $totalScore / $totalResponses;
-    } else {
-        $average = 0; // Handle the case where there are no responses.
-    }
-
-    // Echo the final average score
-    echo "Average Score: $average<br>";
-
-    // Close the database connection
-    $conn->close();
-
-    return $average;
+    $averageScore = $totalScore / $totalResponses;
+    $averageScore = round($averageScore, 2);
+    return $averageScore;
 }
 
 
+function computeForm($formID, $percentage){
+    $conn = connection();
 
-?> -->
+    $sql = "SELECT * FROM `form_response` WHERE `response_type` = 'scale' and `form_id` = $formID";
+    $result = $conn->query($sql);
+
+    $totalScore = 0;
+    $totalResponses = 0;
+
+    while($row = $result->fetch_assoc()) {
+        // get all the scale responses from the json "value" key
+        $scaleResponses = json_decode($row['response_value'], true)['value'];
+        // print_r($scaleResponses);
+        //iterate through the nested json array
+        foreach($scaleResponses as $scaleResponse) {
+            foreach($scaleResponse as $key => $value){
+                $totalScore += $value;
+                $totalResponses++;
+            }
+        }
+    }
+
+    $averageScore = $totalScore / $totalResponses;
+    $averageScore = round($averageScore, 2);
+    
+    $percentageResult = ($averageScore / 100) * $percentage;
+
+    // Assuming you want to return the percentage result
+    return $percentageResult;
+
+}
+
+function userTypes(){
+    $conn = connection();
+    // create an sql query that will select distinct user roles from user table
+    //if user is admin, return the admin_level from admin table based on user_id from usertable
+    //else return just the role from user table
+    $sql = "SELECT DISTINCT
+            CASE 
+                WHEN u.role IN ('faculty', 'admin') AND a.user_id IS NOT NULL THEN CONCAT(a.admin_level)
+                ELSE u.role
+                END AS formatted_user_type,
+                u.role AS original_user_role
+            FROM users u
+            LEFT JOIN admin a ON u.user_id = a.user_id";
+    
+    $result = $conn->query($sql);
+    
+}
+
+
+?>
