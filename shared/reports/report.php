@@ -66,6 +66,18 @@ $role = $_SESSION['role'];
         button{
             width: 40%;
         }
+        .inputs.enabled{
+            width: 50px !important;
+            padding: 0 !important;
+        }
+        .inputs.disabled{
+            width: 50px !important;
+            padding: 0 !important;
+        }
+        .icon{
+            background-color:transparent !important; 
+            width: fit-content !important";
+        }
     </style>
 
 
@@ -88,9 +100,12 @@ $role = $_SESSION['role'];
 
     
     <div style="text-align: right; margin: 2% 11% 2% 10%;">
-        <a href="default.asp">
+        <a href="">
             <img src="../../assets/images/print.png" alt="Print" style="width:28px;height:28px;">
         </a>
+        <button class="icon" id="edit-report">
+            <img src="https://cdn-icons-png.flaticon.com/512/7398/7398464.png" alt="" width="28px" height="28px">
+        </button>
     </div>
     <div class="report-header" style=" ">
     
@@ -125,17 +140,42 @@ $role = $_SESSION['role'];
                             TOTAL
                         </div>
                     </div>
+                    <?php
+                    // $forms = getForms();
+                    // foreach($forms as $id => $name){
+                        ?>
+                        <!-- <div class="row" id="head">
+                            <div class="col-5">
+                                <?= $name?>
+                            </div>
+                            <div class="col-2" id="center">
+                                (35%)
+                            </div>
+                            <div class="col-4" id="center">
+                            </div>
+                            <div class="col-1" id="center">
+                                ---
+                            </div>
+                        </div> -->
+                        <?php
+                    // }
+                    ?>
                     <div class="row" id="head">
                         <div class="col-5">
                             Classroom Observation
+                            <button class="icon">
+                            <img src="https://cdn.icon-icons.com/icons2/2761/PNG/512/plus_insert_add_rectangle_icon_176436.png" alt=""
+                            width="28px" height="28px">
+                        </button>
                         </div>
                         <div class="col-2" id="center">
-                            (35%)
+                        <input type="number" class="inputs enabled" name="numberInput" min="1" max="100" value="35">%
+                        
                         </div>
                         <div class="col-4" id="center">
                         </div>
                         <div class="col-1" id="center">
-                            ---
+                            --
                         </div>
                     </div>
                     <div class="row" id="content">
@@ -143,7 +183,8 @@ $role = $_SESSION['role'];
                             1. VDAA
                         </div>
                         <div class="col-2" id="center">
-                            (5%)
+                        <input type="number" class="inputs enabled" name="numberInput" min="1" max="100" value="5">%
+
                         </div>
                         <div class="col-2" id="center">
                         </div>
@@ -156,7 +197,8 @@ $role = $_SESSION['role'];
                             2. Chair/Coordinator
                         </div>
                         <div class="col-2" id="center">
-                            (30%)
+                        <input type="number" class="inputs enabled" name="numberInput" min="1" max="100" value="30">%
+
                         </div>
                         <div class="col-2" id="center">
                         </div>
@@ -172,7 +214,8 @@ $role = $_SESSION['role'];
                             Performance Appraisal
                         </div>
                         <div class="col-2" id="center">
-                            (40%)
+                        <input type="number" class="inputs enabled" name="numberInput" min="1" max="100" value="40">%
+
                         </div>
                         <div class="col-4" id="center">
                         </div>
@@ -185,7 +228,8 @@ $role = $_SESSION['role'];
                             1. Dean/VDAA
                         </div>
                         <div class="col-2" id="center">
-                            (5%)
+                        <input type="number" class="inputs enabled" name="numberInput" min="1" max="100" value="5">%
+
                         </div>
                         <div class="col-2" id="center">
                         </div>
@@ -198,7 +242,8 @@ $role = $_SESSION['role'];
                             2. Chair/Coordinator
                         </div>
                         <div class="col-2" id="center">
-                            (30%)
+                        <input type="number" class="inputs enabled" name="numberInput" min="1" max="100" value="30">%
+
                         </div>
                         <div class="col-2" id="center">
                         </div>
@@ -214,7 +259,8 @@ $role = $_SESSION['role'];
                             Student Evaluation
                         </div>
                         <div class="col-2" id="center">
-                            (20%)
+                        <input type="number" class="inputs enabled" name="numberInput" min="1" max="100" value="20">%
+
                         </div>
                         <div class="col-4" id="center">
                         </div>
@@ -230,7 +276,8 @@ $role = $_SESSION['role'];
                             Self Evaluation
                         </div>
                         <div class="col-2" id="center">
-                            (5%)
+                        <input type="number" class="inputs enabled" name="numberInput" min="1" max="100" value="5">%
+
                         </div>
                         <div class="col-4" id="center">
                         </div>
@@ -244,7 +291,7 @@ $role = $_SESSION['role'];
 
 
                     <form action="#" method="post" class="w-100" style="  display: flex; justify-content: center;">
-                         <button type="submit" name="btn-logout"  class="rounded-pill py-1">Log out</button>
+                         <!-- <button type="submit" name="btn-logout"  class="rounded-pill py-1">Log out</button> -->
                      </form>
                     </div>
 
@@ -270,6 +317,7 @@ $role = $_SESSION['role'];
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
         crossorigin="anonymous"></script>
     <script src="../js/response-form-jquery.js"></script>
+    <script src="../reports/report.js"></script>
 
 </body>
 

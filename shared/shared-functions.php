@@ -858,5 +858,23 @@ function computeForm($formID, $percentage){
 
 }
 
+function userTypes(){
+    $conn = connection();
+    // create an sql query that will select distinct user roles from user table
+    //if user is admin, return the admin_level from admin table based on user_id from usertable
+    //else return just the role from user table
+    $sql = "SELECT DISTINCT
+            CASE 
+                WHEN u.role IN ('faculty', 'admin') AND a.user_id IS NOT NULL THEN CONCAT(a.admin_level)
+                ELSE u.role
+                END AS formatted_user_type,
+                u.role AS original_user_role
+            FROM users u
+            LEFT JOIN admin a ON u.user_id = a.user_id";
+    
+    $result = $conn->query($sql);
+    
+}
+
 
 ?>

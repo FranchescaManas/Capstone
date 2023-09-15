@@ -24,7 +24,7 @@
 
         $formcount = $form->getFormID($_SESSION['user_id'], $_SESSION['role']);
 
-        if (count($formcount) > 1)  {
+        if (count($formcount) >= 1)  {
             ?>
             <li class="sidebar-item">
                 <a href="../shared/forms/form.php">Forms</a>
