@@ -1,0 +1,7 @@
+{
+    "require": {
+        "phpoffice/phpspreadsheet": "^1.29",
+        "thiagoalessio/tesseract_ocr": "^2.12",
+        "agentile/php-stanford-nlp": "^0.1.1"
+    }
+}
