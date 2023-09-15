@@ -1,6 +1,6 @@
 <?
 session_start();
-include_once $_SERVER['DOCUMENT_ROOT'] . '/capstone/shared/connection.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/capstone2/shared/connection.php';
 $role = $_SESSION['role'];
 $link = "../../' . $role . '/index.php?page=forms";
 
@@ -13,7 +13,7 @@ $link = "../../' . $role . '/index.php?page=forms";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evaluate</title>
-    <link rel="stylesheet" href="/capstone/shared/css/components.css">
+    <link rel="stylesheet" href="/capstone2/shared/css/components.css">
     <!-- bootstrap cdn -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
@@ -21,9 +21,9 @@ $link = "../../' . $role . '/index.php?page=forms";
 
 <body class="d-flex flex-column justify-content-center align-content-center ">
     <?php
-    include $_SERVER['DOCUMENT_ROOT'] . '/capstone/shared/navbar.php';
-    include $_SERVER['DOCUMENT_ROOT'] .'/capstone/shared/shared-functions.php';
-    include_once $_SERVER['DOCUMENT_ROOT'] . '/capstone/shared/forms/FormClass.php';
+    include $_SERVER['DOCUMENT_ROOT'] . '/capstone2/shared/navbar.php';
+    include $_SERVER['DOCUMENT_ROOT'] .'/capstone2/shared/shared-functions.php';
+    include_once $_SERVER['DOCUMENT_ROOT'] . '/capstone2/shared/forms/FormClass.php';
 
     $faculty = facultyData();
     $form = new Form;

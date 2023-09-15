@@ -1,5 +1,5 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . '/capstone/shared/connection.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/capstone2/shared/connection.php';
 class Form
 {
     private $formName;

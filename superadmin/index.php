@@ -4,7 +4,7 @@
 
     Notice that the url holds the value that current page is showing once option in sidemenu is clicked
     example:
-    http://localhost/Capstone/student/index.php?page=dashboard
+    http://localhost/capstone2/student/index.php?page=dashboard
 
     NEXT:
     super-admin-navmenubar.php

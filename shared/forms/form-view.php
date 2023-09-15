@@ -1,8 +1,8 @@
 
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . '/capstone/shared/shared-functions.php';
-include_once $_SERVER['DOCUMENT_ROOT'] . '/capstone/shared/forms/FormClass.php';
-include_once $_SERVER['DOCUMENT_ROOT'] . '/capstone/shared/forms/form-modal.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/capstone2/shared/shared-functions.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/capstone2/shared/forms/FormClass.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/capstone2/shared/forms/form-modal.php';
 
 $userID = $_SESSION['user_id'];
 $role = $_SESSION['role'];
@@ -69,7 +69,7 @@ $role = $_SESSION['role'];
         ?>
 
         <?php
-        include_once $_SERVER['DOCUMENT_ROOT'] . '/capstone/shared/forms/form-modal.php';
+        include_once $_SERVER['DOCUMENT_ROOT'] . '/capstone2/shared/forms/form-modal.php';
         ?>
     </aside>
 

@@ -9,9 +9,9 @@ use StanfordNLP\POSTagger;
 use StanfordNLP\Parser;
 
 
-$path = $_SERVER['DOCUMENT_ROOT'] . '/capstone/assets/stanford-postagger';
-$path2 = $_SERVER['DOCUMENT_ROOT'] . '/capstone/assets/stanford-parser';
-$path3 = $_SERVER['DOCUMENT_ROOT'] . '/capstone/assets/stanford-ner';
+$path = $_SERVER['DOCUMENT_ROOT'] . '/capstone2/assets/stanford-postagger';
+$path2 = $_SERVER['DOCUMENT_ROOT'] . '/capstone2/assets/stanford-parser';
+$path3 = $_SERVER['DOCUMENT_ROOT'] . '/capstone2/assets/stanford-ner';
 
 $pos = new POSTagger(
 $path . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'english-left3words-distsim.tagger',

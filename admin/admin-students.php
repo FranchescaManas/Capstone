@@ -1,6 +1,6 @@
 <?php
 
-include_once $_SERVER['DOCUMENT_ROOT'] . '/capstone/shared/shared-functions.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/capstone2/shared/shared-functions.php';
 
 ?>
 
