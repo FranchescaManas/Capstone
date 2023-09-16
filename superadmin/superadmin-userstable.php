@@ -40,11 +40,7 @@
 
         <section class="flex-center flex-wrap w-100">
             <input type="text" placeholder="search" id="txtbx_search" onkeyup="filterTable()" class="searchbox rounded-pill">
-<<<<<<< HEAD
             <!-- <button class="rounded custom-btn">Filter</button> -->
-=======
-            <button class="rounded custom-btn">Filter</button>
->>>>>>> db2bacca1cb8e82f204f3fab1b337e136a461f0c
             <button class="rounded custom-btn">Import</button>
         </section>
 

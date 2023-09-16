@@ -50,10 +50,6 @@ $(document).ready(function() {
     });
 
     $('#save-permission').click(function(){
-<<<<<<< HEAD
-=======
-        alert('akdjflakd');
->>>>>>> db2bacca1cb8e82f204f3fab1b337e136a461f0c
         var selectedFormID = $('#form-select').val();
         var canAccess = $('#canAccess').prop('checked');
         var canViewResults = $('#canViewResults').prop('checked');
@@ -105,16 +101,10 @@ $(document).ready(function() {
         isFormChecked();
     });
 
-<<<<<<< HEAD
-    $('#save-schedule').click(function(){
-        // get forms of the checkboxes through the value
-
-=======
     
     $('#save-schedule').on('click',function(){
         // get forms of the checkboxes through the value
         alert('save schedule');
->>>>>>> db2bacca1cb8e82f204f3fab1b337e136a461f0c
         const selectedForms = $('.form-check-input:checked');
         const startDate = $('#start-date').val();
         const endDate = $('#end-date').val();
@@ -137,10 +127,7 @@ $(document).ready(function() {
                 action: JSON.stringify({ 'action': 'update schedule', 'role': userRole})
             },
             success: function(response) {
-<<<<<<< HEAD
-=======
                 // console.log(response);/
->>>>>>> db2bacca1cb8e82f204f3fab1b337e136a461f0c
                 if(response === 'success'){
                     window.location=document.referrer;
                 }
@@ -152,13 +139,7 @@ $(document).ready(function() {
             }
         });
 
-<<<<<<< HEAD
-        
-
-
-=======
     
->>>>>>> db2bacca1cb8e82f204f3fab1b337e136a461f0c
     });
 
     function isFormChecked(){

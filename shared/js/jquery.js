@@ -1,45 +1,63 @@
 
 $(document).ready(function () {
-    if(isModifyMode){
-        console.log('modify mode');
+
+    if (isModifyMode) {
+        console.log('testetstsetsets');
         var fieldcounter = 0;
-        var page_count = null;
-        
-        $.each(data.form_pages, function(key, value){
-            var page_count = value.page_id
-            console.log(page_count);
-            if(data.form_pages.length > 1){
-                $('#form').append(generateFormFieldGroup('page'));
-                $('#form .field-group:last').find('.field-page').attr('value', value.page_id);
+        $.each(data.form_pages, function (key, value) {
+            var page_count = value.page_id;
+            
+            $('#form').append(generateFormFieldGroup('page'));
+            $('#form .field-group:last').find('.field-page').attr('value', value.page_id);
+            $('#form .field-group:last').find('.field-page').attr('id', value.page_id);
+            $('#form .field-group:last').attr('id', fieldcounter);
+            var questionsWithoutSection = [];
+    
+        // Create a dictionary to organize questions by section
+        var questionsBySection = {};
+    
+        $.each(data.form_questions, function (key, question) {
+            var questionSection = question.section_id;
+    
+            if (!questionSection) {
+                // Handle questions without sections
+                questionsWithoutSection.push(question);
+            } else {
+                // Handle questions with sections
+                if (!questionsBySection[questionSection]) {
+                    questionsBySection[questionSection] = [];
+                }
+                questionsBySection[questionSection].push(question);
             }
         });
-
-        console.log(data.form_questions);
-        $.each(data.form_questions, function(key, value){
-            $('#form').append(generateFormFieldGroup(value.question_type));
+    
+        // Display questions without sections first
+        $.each(questionsWithoutSection, function (key, question) {
+            $('#form').append(generateFormFieldGroup(question.question_type));
             $('#form .field-group:last').attr('id', fieldcounter);
-            $('#form .field-group:last').find('.field-question').attr('value', value.question_text);
-            var questionType = value.question_type;
-            if(questionType === 'scale'){
-                // console.log(value.options);
-                var options = value.options;
+            $('#form .field-group:last').find('.field-question').attr('value', question.question_text);
+            var questionType = question.question_type;
+            $('#form .field-group:last').find('.field-question').addClass('field-' + questionType);
+    
+            if (questionType === 'scale') {
+                var options = question.options;
                 var labels = options['scale-labels'];
                 var statement = options['scale-statement'];
                 var statement_count = 1;
-                // console.log(labels)
-                $.each(labels, function(key, value){
-                    // console.log(value);
+    
+                $.each(labels, function (key, value) {
                     $('#form .field-group:last').find('.scale-options').append(
-                        $('<input>', {  
+                        $('<input>', {
                             type: 'text',
                             class: 'scale-input w-25 mb-2',
                             name: 'end_scale_range' + key,
                             placeholder: 'placeholder',
                             value: value
                         })
-                        );
-                    });
-                $.each(statement, function(key, value){
+                    );
+                });
+    
+                $.each(statement, function (key, value) {
                     $('#form .field-group:last').find('.statements').append(
                         $('<input>', {
                             type: 'text',
@@ -51,11 +69,11 @@ $(document).ready(function () {
                     );
                     statement_count++;
                 });
-            }else if(questionType === 'choice' || questionType === 'dropdown'){
-                var options = value.options;
+            } else if (questionType === 'choice' || questionType === 'dropdown') {
+                var options = question.options;
                 console.log(options);
                 var options_count = 1;
-                $.each(options, function(key, value){
+                $.each(options, function (key, value) {
                     $('#form .field-group:last').find('.form-option-container').append(
                         $('<input>', {
                             type: 'text',
@@ -64,19 +82,96 @@ $(document).ready(function () {
                             placeholder: 'Enter option ' + options_count,
                             value: value
                         })
-                        );
-                    }  
                     );
-                }else if(questionType === 'section'){
-                    $('#form').append(generateFormFieldGroup('section'));
-                    $('#form .field-group:last').attr('id');
-                    $('#form .field-group:last').find('.field-section').attr('value', value.question_text);
-                }
-                $('#form .field-group:last').find('.field-question').attr('id', value.question_id);
-            }); 
-            console.log('fadf');
-        adjustButton();
+                });
+            }
+            $('#form .field-group:last').find('.field-question').attr('id', question.question_id);
+        });
+    
+        // Display questions within sections
+        $.each(data.form_sections, function (key, section) {
+            var section_count = section.section_id;
+            var section_name = section.section_name;
+    
+            // Display the section
+            if (section_count !== null) {
+                $('#form').append(generateFormFieldGroup('section'));
+                $('#form .field-group:last').attr('id', fieldcounter);
+                $('#form .field-group:last').find('.field-section').attr('value', section_name);
+                $('#form .field-group:last').find('.field-section').attr('id', section_count);
+                $('#form .field-group:last').find('.field-question').addClass('field-section');
+            }
+    
+            // Display questions within this section
+            if (section_count in questionsBySection) {
+                $.each(questionsBySection[section_count], function (key, question) {
+                    $('#form').append(generateFormFieldGroup(question.question_type));
+                    $('#form .field-group:last').attr('id', fieldcounter);
+                    $('#form .field-group:last').find('.field-question').attr('value', question.question_text);
+                    var questionType = question.question_type;
+                    $('#form .field-group:last').find('.field-question').addClass('field-' + questionType);
+    
+                    if (questionType === 'scale') {
+                        var options = question.options;
+                        var labels = options['scale-labels'];
+                        var statement = options['scale-statement'];
+                        var statement_count = 1;
+    
+                        $.each(labels, function (key, value) {
+                            $('#form .field-group:last').find('.scale-options').append(
+                                $('<input>', {
+                                    type: 'text',
+                                    class: 'scale-input w-25 mb-2',
+                                    name: 'end_scale_range' + key,
+                                    placeholder: 'placeholder',
+                                    value: value
+                                })
+                            );
+                        });
+    
+                        $.each(statement, function (key, value) {
+                            $('#form .field-group:last').find('.statements').append(
+                                $('<input>', {
+                                    type: 'text',
+                                    class: 'scale-statement w-75 mb-1',
+                                    name: 'scale_statement_' + statement_count,
+                                    placeholder: 'Enter scale statement ' + statement_count,
+                                    value: value
+                                })
+                            );
+                            statement_count++;
+                        });
+                    } else if (questionType === 'choice' || questionType === 'dropdown') {
+                        var options = question.options;
+                        console.log(options);
+                        var options_count = 1;
+                        $.each(options, function (key, value) {
+                            $('#form .field-group:last').find('.form-option-container').append(
+                                $('<input>', {
+                                    type: 'text',
+                                    class: 'add-option-input w-75 mb-1',
+                                    name: 'add_option_input' + options_count++,
+                                    placeholder: 'Enter option ' + options_count,
+                                    value: value
+                                })
+                            );
+                        });
+                    }
+                    $('#form .field-group:last').find('.field-question').attr('id', question.question_id);
+                });
+            }
+            });
+    
+            adjustButton();
+            
+        });
+        console.log(page_count);
+    
+        // Create an array to hold questions without sections
+        
+        
     }
+    
 
     function generateFormFieldGroup(selectedValue = 'paragraph') {
         var formGroup = $('<div>', {
@@ -485,7 +580,7 @@ $(document).ready(function () {
 
             if(isModifyMode){
                 questionID = $(this).find('.field-question').attr('id');
-                // console.log(questionID);
+                
             }else{
                 var questionID = null;
             }

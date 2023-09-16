@@ -17,7 +17,7 @@ $role = $_SESSION['role'];
     <link rel="stylesheet" href="../css/forms.css">
     <!-- jquery cdn -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"
-        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script> 
+        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 
@@ -33,54 +33,65 @@ $role = $_SESSION['role'];
             z-index: -1;
         }
 
-        .form-schedule-card{
+        .form-schedule-card {
             text-align: left;
             background: none;
             width: 85%;
             max-height: none;
         }
 
-        #head{
+        .head {
             background-color: #C9C9C9;
             padding: 12px 0px 12px 0px;
             margin: 7px 0px 0px 0px;
             font-size: 16px;
         }
 
-        #content{
-            background-color: rgba(201,201,201, 0.3);
+        .content {
+            background-color: rgba(201, 201, 201, 0.3);
             padding: 7px 0px 7px 0px;
-            margin: 0px 0px 2px 0px;   
+            margin: 0px 0px 2px 0px;
         }
 
-        #content2{
-            
+        .content2 {
+
             padding: 7px 0px 7px 0px;
-            margin: 0px 0px 2px 0px;   
+            margin: 0px 0px 2px 0px;
         }
 
-        #center{
+        #center {
             text-align: center;
         }
 
-        button{
+        button {
             width: 40%;
         }
-<<<<<<< HEAD
-=======
-        .inputs.enabled{
+
+        .inputs {
             width: 50px !important;
             padding: 0 !important;
+            text-align: right !important;
         }
-        .inputs.disabled{
-            width: 50px !important;
-            padding: 0 !important;
+
+        .enabled {
+            /* width: 50px !important; */
+            /* padding: 0 !important; */
+            /* border:none !important; */
+            background-color: none !important;
         }
-        .icon{
-            background-color:transparent !important; 
+
+        .disabled {
+            /* width: 50px !important; */
+            /* padding: 0 !important; */
+            border: none !important;
+            background-color: transparent !important;
+        }
+
+        .icon, .minus{
+            background-color: transparent !important;
             width: fit-content !important";
+
         }
->>>>>>> db2bacca1cb8e82f204f3fab1b337e136a461f0c
     </style>
 
 
@@ -90,8 +101,8 @@ $role = $_SESSION['role'];
 
 
 <body>
-    
-<?php
+
+    <?php
     // include '../connection.php';
     include '../navbar.php';
     // include_once '../connection.php';
@@ -99,39 +110,34 @@ $role = $_SESSION['role'];
     ?>
 
     <main class="report" style="overflow: visible;">
-    <h3>Faculty Performance Appraisal Summative Report</h3>
+        <h3>Faculty Performance Appraisal Summative Report</h3>
 
-    
-    <div style="text-align: right; margin: 2% 11% 2% 10%;">
-<<<<<<< HEAD
-        <a href="default.asp">
-            <img src="../../assets/images/print.png" alt="Print" style="width:28px;height:28px;">
-        </a>
-=======
-        <a href="">
-            <img src="../../assets/images/print.png" alt="Print" style="width:28px;height:28px;">
-        </a>
-        <button class="icon" id="edit-report">
-            <img src="https://cdn-icons-png.flaticon.com/512/7398/7398464.png" alt="" width="28px" height="28px">
-        </button>
->>>>>>> db2bacca1cb8e82f204f3fab1b337e136a461f0c
-    </div>
-    <div class="report-header" style=" ">
-    
-        <div class="col" style="text-align: left; ">
-        <b>Faculty: </b></br></br>
-        <b>Department: </b>
 
+        <div style="text-align: right; margin: 2% 11% 2% 10%;">
+            <a href="">
+                <img src="../../assets/images/print.png" alt="Print" style="width:28px;height:28px;">
+            </a>
+            <button class="icon inputs" id="edit-report">
+                <img src="https://cdn-icons-png.flaticon.com/512/7398/7398464.png" alt="" width="28px" height="28px">
+            </button>
         </div>
-        <div class="col" style="text-align: right;">
-        <b>Date of Class/Observation: -----</b></br></br>
-        <b>Evaluation Period: ----</b>
+        <div class="report-header" style=" ">
+
+            <div class="col" style="text-align: left; ">
+                <b>Faculty: </b></br></br>
+                <b>Department: </b>
+
+            </div>
+            <div class="col" style="text-align: right;">
+                <b>Date of Class/Observation: -----</b></br></br>
+                <b>Evaluation Period: ----</b>
+            </div>
         </div>
-    </div>
 
 
-    <section class="flex-between flex-wrap">
-           
+        <section class="flex-between flex-wrap">
+
+        <form action="#" method="post" class="w-100 d-flex flex-column align-items-center">
 
             <div class="form-schedule-card">
 
@@ -149,217 +155,50 @@ $role = $_SESSION['role'];
                             TOTAL
                         </div>
                     </div>
-<<<<<<< HEAD
-                    <div class="row" id="head">
-                        <div class="col-5">
-                            Classroom Observation
-                        </div>
-                        <div class="col-2" id="center">
-                            (35%)
-=======
+
                     <?php
-                    // $forms = getForms();
-                    // foreach($forms as $id => $name){
+                    $forms = getForms();
+                    foreach ($forms as $id => $name) {
                         ?>
-                        <!-- <div class="row" id="head">
-                            <div class="col-5">
-                                <?= $name?>
+                        <div class="row head" id="<?= $id ?>">
+                            <div class="col-4">
+                                <?= $name ?>
+                            </div>
+                            <div class="col-1">
+                                <button class="icon">
+                                    <img src="https://cdn.icon-icons.com/icons2/2761/PNG/512/plus_insert_add_rectangle_icon_176436.png"
+                                        alt="" width="28px" height="28px">
+                                </button>
                             </div>
                             <div class="col-2" id="center">
-                                (35%)
+                                <input type="number" class="inputs enabled" name="numberInput" min="1" max="100" value="5">%
                             </div>
-                            <div class="col-4" id="center">
-                            </div>
+                            <div class="col-4" id="center"></div>
                             <div class="col-1" id="center">
                                 ---
                             </div>
-                        </div> -->
+                        </div>
                         <?php
-                    // }
+                    }
                     ?>
-                    <div class="row" id="head">
-                        <div class="col-5">
-                            Classroom Observation
-                            <button class="icon">
-                            <img src="https://cdn.icon-icons.com/icons2/2761/PNG/512/plus_insert_add_rectangle_icon_176436.png" alt=""
-                            width="28px" height="28px">
-                        </button>
-                        </div>
-                        <div class="col-2" id="center">
-                        <input type="number" class="inputs enabled" name="numberInput" min="1" max="100" value="35">%
-                        
->>>>>>> db2bacca1cb8e82f204f3fab1b337e136a461f0c
-                        </div>
-                        <div class="col-4" id="center">
-                        </div>
-                        <div class="col-1" id="center">
-<<<<<<< HEAD
-                            ---
-=======
-                            --
->>>>>>> db2bacca1cb8e82f204f3fab1b337e136a461f0c
-                        </div>
-                    </div>
-                    <div class="row" id="content">
-                        <div class="col-5">
-                            1. VDAA
-                        </div>
-                        <div class="col-2" id="center">
-<<<<<<< HEAD
-                            (5%)
-=======
-                        <input type="number" class="inputs enabled" name="numberInput" min="1" max="100" value="5">%
 
->>>>>>> db2bacca1cb8e82f204f3fab1b337e136a461f0c
-                        </div>
-                        <div class="col-2" id="center">
-                        </div>
-                        <div class="col-1" id="center">
-                            ---
-                        </div>
-                    </div>
-                    <div class="row" id="content2">
-                        <div class="col-5">
-                            2. Chair/Coordinator
-                        </div>
-                        <div class="col-2" id="center">
-<<<<<<< HEAD
-                            (30%)
-=======
-                        <input type="number" class="inputs enabled" name="numberInput" min="1" max="100" value="30">%
-
->>>>>>> db2bacca1cb8e82f204f3fab1b337e136a461f0c
-                        </div>
-                        <div class="col-2" id="center">
-                        </div>
-                        <div class="col-1" id="center">
-                            ---
-                        </div>
-                    </div>
-
-                    
-
-                    <div class="row" id="head">
-                        <div class="col-5">
-                            Performance Appraisal
-                        </div>
-                        <div class="col-2" id="center">
-<<<<<<< HEAD
-                            (40%)
-=======
-                        <input type="number" class="inputs enabled" name="numberInput" min="1" max="100" value="40">%
-
->>>>>>> db2bacca1cb8e82f204f3fab1b337e136a461f0c
-                        </div>
-                        <div class="col-4" id="center">
-                        </div>
-                        <div class="col-1" id="center">
-                            ---
-                        </div>
-                    </div>
-                    <div class="row" id="content">
-                        <div class="col-5">
-                            1. Dean/VDAA
-                        </div>
-                        <div class="col-2" id="center">
-<<<<<<< HEAD
-                            (5%)
-=======
-                        <input type="number" class="inputs enabled" name="numberInput" min="1" max="100" value="5">%
-
->>>>>>> db2bacca1cb8e82f204f3fab1b337e136a461f0c
-                        </div>
-                        <div class="col-2" id="center">
-                        </div>
-                        <div class="col-1" id="center">
-                            ---
-                        </div>
-                    </div>
-                    <div class="row" id="content2">
-                        <div class="col-5">
-                            2. Chair/Coordinator
-                        </div>
-                        <div class="col-2" id="center">
-<<<<<<< HEAD
-                            (30%)
-=======
-                        <input type="number" class="inputs enabled" name="numberInput" min="1" max="100" value="30">%
-
->>>>>>> db2bacca1cb8e82f204f3fab1b337e136a461f0c
-                        </div>
-                        <div class="col-2" id="center">
-                        </div>
-                        <div class="col-1" id="center">
-                            ---
-                        </div>
-                    </div>
-
-
-
-                    <div class="row" id="head">
-                        <div class="col-5">
-                            Student Evaluation
-                        </div>
-                        <div class="col-2" id="center">
-<<<<<<< HEAD
-                            (20%)
-=======
-                        <input type="number" class="inputs enabled" name="numberInput" min="1" max="100" value="20">%
-
->>>>>>> db2bacca1cb8e82f204f3fab1b337e136a461f0c
-                        </div>
-                        <div class="col-4" id="center">
-                        </div>
-                        <div class="col-1" id="center">
-                            ---
-                        </div>
-                    </div>
-
-
-
-                    <div class="row" id="head">
-                        <div class="col-5">
-                            Self Evaluation
-                        </div>
-                        <div class="col-2" id="center">
-<<<<<<< HEAD
-                            (5%)
-=======
-                        <input type="number" class="inputs enabled" name="numberInput" min="1" max="100" value="5">%
-
->>>>>>> db2bacca1cb8e82f204f3fab1b337e136a461f0c
-                        </div>
-                        <div class="col-4" id="center">
-                        </div>
-                        <div class="col-1" id="center">
-                            ---
-                        </div>
-                    </div>
 
                     </br></br>
-                    <h4 id="center"><p>OVERALL: ---</p> </h4> 
-
-
-                    <form action="#" method="post" class="w-100" style="  display: flex; justify-content: center;">
-<<<<<<< HEAD
-                         <button type="submit" name="btn-logout"  class="rounded-pill py-1">Log out</button>
-=======
-                         <!-- <button type="submit" name="btn-logout"  class="rounded-pill py-1">Log out</button> -->
->>>>>>> db2bacca1cb8e82f204f3fab1b337e136a461f0c
-                     </form>
-                    </div>
-
+                    <h4 id="center">
+                        <p>OVERALL: ---</p>
+                    </h4>
 
                     
-
-                    
-
+                    <button type="submit" name="save-report" id="save-report"
+                        class="rounded-pill py-1 align-self-center">Save</button>
                 </div>
 
-
-                
             </div>
-            
+
+            </div>
+
+            </form>
+
 
         </section>
     </main>
@@ -371,10 +210,7 @@ $role = $_SESSION['role'];
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
         crossorigin="anonymous"></script>
     <script src="../js/response-form-jquery.js"></script>
-<<<<<<< HEAD
-=======
     <script src="../reports/report.js"></script>
->>>>>>> db2bacca1cb8e82f204f3fab1b337e136a461f0c
 
 </body>
 

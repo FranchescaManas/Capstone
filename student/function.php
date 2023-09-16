@@ -40,11 +40,7 @@ function getFaculty($user_id){
 
             }
             echo '
-<<<<<<< HEAD
-            <div class="faculty-row row ms-2 my-3 ps-2" id='.$facultyID[$i].'>
-=======
             <div class="faculty-row row p-4" id='.$facultyID[$i].'>
->>>>>>> db2bacca1cb8e82f204f3fab1b337e136a461f0c
                         <div class="col-10">
                             '.$professorsArray[$i].'
                         </div>

@@ -68,7 +68,7 @@ include '../shared-functions.php';
                 <?php
                 
                 
-                echo '<button id="form-submit" class="rounded" style="width: 10%;"value="' . $_SESSION['role'] . '">Submit</button>';
+                echo '<button id="form-submit" class="rounded" style="width: 10% !important;"value="' . $_SESSION['role'] . '">Submit</button>';
 
         } else {
             ?>
@@ -81,14 +81,7 @@ include '../shared-functions.php';
 
 
 
-<<<<<<< HEAD
-                    <div style="width: 10%;">
                     <button id="form-submit" class="rounded" value="<?php echo $_SESSION['role']; ?>">Submit</button>
-                    </div>
-                    
-=======
-                    <button id="form-submit" class="rounded" value="<?php echo $_SESSION['role']; ?>">Submit</button>
->>>>>>> db2bacca1cb8e82f204f3fab1b337e136a461f0c
 
 
                     <?php

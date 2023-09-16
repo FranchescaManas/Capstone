@@ -351,8 +351,13 @@ function updateForm($formData)
     $sectionID = null;
     $section_count = 0;
     $page_count = 0;
-
-    $formID = $formData['formid'];
+    // if formID is array get the first, else get the formID
+    print_r($formData);
+    if(is_array($formData['formid'])){
+        $formID = $formData['formid'][0];
+    }else{
+        $formID = $formData['formid'];
+    }
 
 
     print_r($formData);
@@ -441,7 +446,7 @@ function updateForm($formData)
             $questionType = isset($item['type']) ? mysqli_real_escape_string($conn, $item['type']) : '';
             $options = isset($item['options']) ? json_encode($item['options']) : null;
             $questionOrder = isset($item['order']) ? $item['order'] : 0;
-
+            echo "page id is ----- " . $pageID;
 
             $insertQuestionSql = "INSERT INTO form_question (`section_id`, `question_text`, `question_type`, `options`, `question_order`, `form_id`, `page_id`)
             VALUES (?, ?, ?, ?, ?, ?, ?)";
