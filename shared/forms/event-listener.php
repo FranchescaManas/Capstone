@@ -79,6 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }else if ($action === 'update schedule') {
                     updateSchedule($formData);
                     echo "success";
+                }else if($action === 'save report'){
+                    saveReport($formData);
+                    // print_r($_POST);
                 }
                 // TODO: put the success prompt in the ajax if query works
                 echo "success";
@@ -89,6 +92,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else if ($action === 'update schedule') {
                     updateSchedule($formData);
                     echo "success";
+                }
+                else if($action === 'save report'){
+                    saveReport($formData);
                 }
             }
         }

@@ -38,6 +38,7 @@
         <img class="user-profile my-2" src="../assets/images/user.jpg" 
             alt="user-profile" width="40px">
         <h6><?php echo getUsername(); ?></h6>
+        <?= $_SESSION['role'];?>
         <small class="user-role"><?php echo getRole(); ?></small>
         <form action="#" method="post" class="w-100">
             <button type="submit" name="btn-logout" class="rounded-pill py-1">Log out</button>

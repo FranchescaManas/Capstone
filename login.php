@@ -30,6 +30,10 @@ function login($username, $password){
                     header('location: ./superadmin');
                     
                }elseif($_SESSION['role'] == 'admin'){
+                    $sql = "SELECT `admin_level` FROM `admin` WHERE `user_id` = " . $_SESSION['user_id'];
+                    $result = $conn->query($sql);
+                    $row = $result->fetch_assoc();
+                    $_SESSION['role'] = $row['admin_level'];
                     header('location: ./admin/index.php?page=dashboard');
                     
                }elseif($_SESSION['role'] == 'faculty'){

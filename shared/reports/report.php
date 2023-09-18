@@ -87,10 +87,13 @@ $role = $_SESSION['role'];
             background-color: transparent !important;
         }
 
-        .icon, .minus{
+        .icon{
             background-color: transparent !important;
-            width: fit-content !important";
-
+            width: fit-content !important;
+        }
+        .minus-row{
+            background-color: transparent !important;
+            width: fit-content !important;
         }
     </style>
 
@@ -107,6 +110,21 @@ $role = $_SESSION['role'];
     include '../navbar.php';
     // include_once '../connection.php';
     include '../shared-functions.php';
+
+    $faculty = facultyData();
+
+    //create a function that will add data to the select from database
+    $select = [];
+    $selectData = userTypes();
+
+    
+    $selectOptions = '<select class="form-control inputs" style="width: fit-content !important">';
+    while ($row = $selectData->fetch_assoc()) {
+        print_r($row);
+        // Include department as a data attribute
+        $selectOptions .= '<option>' . $row['user_type'] . '</option>';
+    }
+    $selectOptions .= '</select>';
     ?>
 
     <main class="report" style="overflow: visible;">
@@ -124,20 +142,34 @@ $role = $_SESSION['role'];
         <div class="report-header" style=" ">
 
             <div class="col" style="text-align: left; ">
-                <b>Faculty: </b></br></br>
-                <b>Department: </b>
-
+                <b>Faculty: </b>
+                <select name="faculty_report" id="professor" class="rounded">
+                            
+                    <?php
+                        while ($row = $faculty->fetch_assoc()) {
+                            // Include department as a data attribute
+                            echo '<option value="' . $row['faculty_id'] . '" data-department="' . $row['department'] . '">' . $row['firstname'] . ' ' . $row['lastname'] . '</option>';
+                        }
+                    ?>
+                            
+                        </select>
+                </br></br>
+                
             </div>
             <div class="col" style="text-align: right;">
-                <b>Date of Class/Observation: -----</b></br></br>
-                <b>Evaluation Period: ----</b>
+                <div>
+                    <b>Department: </b><p id="department">-- </p>
+                </div>
+                
+                <!-- <b>Date of Class/Observation: -----</b></br></br>
+                <b>Evaluation Period: ----</b> -->
             </div>
         </div>
 
 
         <section class="flex-between flex-wrap">
 
-        <form action="#" method="post" class="w-100 d-flex flex-column align-items-center">
+        <form action="javascript:void(0)" method="post" class="w-100 d-flex flex-column align-items-center">
 
             <div class="form-schedule-card">
 
@@ -158,6 +190,7 @@ $role = $_SESSION['role'];
 
                     <?php
                     $forms = getForms();
+                    
                     foreach ($forms as $id => $name) {
                         ?>
                         <div class="row head" id="<?= $id ?>">
@@ -171,7 +204,47 @@ $role = $_SESSION['role'];
                                 </button>
                             </div>
                             <div class="col-2" id="center">
-                                <input type="number" class="inputs enabled" name="numberInput" min="1" max="100" value="5">%
+                                <?php
+                                $reportData = reportData($id);
+                                //get the r.percentage from getreportData($formID)
+                                if ($reportData->num_rows > 0) {
+                                    while ($row = $reportData->fetch_assoc()) {
+                                        $percentage = $row['percentage'];
+                                        $observers = json_decode($row['observers'], true);
+                                        echo '<input type="number" class="inputs enabled" name="numberInput" min="0" max="100" value="' . $percentage . '" >%';
+                                        
+                                
+                                        ?>
+                                        
+                                        <script>
+                                            $(document).ready(function(){
+                                                var observers = <?php echo json_encode($observers); ?>;
+                                                var select = <?php echo json_encode($selectOptions); ?>;
+                                                //get the closest .row.head
+                                                console.log(observers);
+                                                if(observers !== null){
+                                                    //loop through observers array
+                                                    for(var i = 0; i < observers.length; i++){
+                                                       observer = observers[i];
+                                                       user = observer.observer;
+                                                       percentage = observer.percentage;
+                                                       rowhead = $('#<?= $id ?>');
+                                                         rowhead.after('<div class="row content"><div class="col-4" id="center">'+select+'</div><div class="col-1" id="center"></div><div class="col-2" id="center"><input type="number" class="inputs disabled" name="numberInput" min="0" max="100" value="'+percentage+'" >%</div><div class="col-1" id="center">---</div></div>');
+                                                    }
+                                                    
+                                                    
+                                                }
+                                            
+                                            });
+                                        </script>
+                                        <?php
+                                        
+                                    }
+                                } else {
+                                    // If no rows are found, display the input field with a default value of 0
+                                    echo '<input type="number" class="inputs enabled" name="numberInput" min="0" max="100" value="0" >%';
+                                }
+                                ?>
                             </div>
                             <div class="col-4" id="center"></div>
                             <div class="col-1" id="center">
@@ -211,6 +284,9 @@ $role = $_SESSION['role'];
         crossorigin="anonymous"></script>
     <script src="../js/response-form-jquery.js"></script>
     <script src="../reports/report.js"></script>
+    <script>
+        var select = <?php echo json_encode($selectOptions); ?>;
+    </script>
 
 </body>
 

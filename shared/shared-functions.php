@@ -536,7 +536,7 @@ function updatePermission($permissionData)
 
         if ($result->num_rows > 0) {
             // Role already has permission entry, so update it
-            if($canAccess === 0 && $canModify === 0 ){
+            if($canAccess == 0 && $canModify == 0 ){
                 //if access is removed for both, delete from permission table
                 $deletePermissionSQL = "DELETE FROM form_permission WHERE form_id = $formID AND `role` = '$respondent'";
                 if ($conn->query($deletePermissionSQL) !== TRUE) {
@@ -551,11 +551,14 @@ function updatePermission($permissionData)
 
         } 
         else {
-            // Role doesn't have permission entry, so insert a new one
-            $insertPermissionSQL = "INSERT INTO form_permission (form_id, can_access, can_modify, `role`) VALUES ($formID, $canAccess, $canModify, '$respondent')";
-            if ($conn->query($insertPermissionSQL) !== TRUE) {
-                echo "Error inserting permission: " . $conn->error;
-            }
+            
+           
+
+                $insertPermissionSQL = "INSERT INTO form_permission (form_id, can_access, can_modify, `role`) VALUES ($formID, $canAccess, $canModify, '$respondent')";
+                if ($conn->query($insertPermissionSQL) !== TRUE) {
+                    echo "Error inserting permission: " . $conn->error;
+                }
+            
         }
     }
 
@@ -607,7 +610,8 @@ function studentData(){
 function facultyData(){
     $conn = connection();
 
-    $sql = "SELECT f.faculty_id, f.user_id, f.employment_status, u.email, u.firstname, u.lastname 
+    $sql = "SELECT f.faculty_id, f.user_id, f.employment_status, u.email, u.firstname, u.lastname, 
+    f.department 
     FROM 
     faculty f
     LEFT JOIN
@@ -865,21 +869,85 @@ function computeForm($formID, $percentage){
 
 function userTypes(){
     $conn = connection();
-    // create an sql query that will select distinct user roles from user table
-    //if user is admin, return the admin_level from admin table based on user_id from usertable
-    //else return just the role from user table
+  
     $sql = "SELECT DISTINCT
             CASE 
                 WHEN u.role IN ('faculty', 'admin') AND a.user_id IS NOT NULL THEN CONCAT(a.admin_level)
                 ELSE u.role
-                END AS formatted_user_type,
-                u.role AS original_user_role
+                END AS user_type,
+                u.role AS `role`
             FROM users u
             LEFT JOIN admin a ON u.user_id = a.user_id";
     
     $result = $conn->query($sql);
+    return $result;
     
 }
 
+function saveReport($formdata) {
+    $conn = connection();
+
+    // Loop through the formdata array
+    foreach ($formdata as $report) {
+        $formID = $report['formID'];
+        $formPercentage = $report['formPercentage'];
+        $observers = json_encode($report['observers'], JSON_UNESCAPED_UNICODE);
+
+        // Check if $observers is an empty JSON array
+        if (empty($report['observers'])) {
+            $observers = 'null';
+        } else {
+            $observers = "'" . $observers . "'";
+        }
+
+        // Check if the form_id already exists in the report table
+        $existingData = getExistingReportData($formID);
+
+        if ($existingData) {
+            // Perform an UPDATE operation
+            $updateSQL = "UPDATE report SET percentage = $formPercentage, observers = $observers WHERE form_id = $formID";
+
+            if ($conn->query($updateSQL) !== TRUE) {
+                echo "Error : " . $updateSQL . "<br>" . $conn->error;
+            }
+        } else {
+            // Perform an INSERT operation
+            $insertSQL = "INSERT INTO report (`form_id`, `percentage`, `observers`) VALUES ($formID, $formPercentage, $observers)";
+
+            if ($conn->query($insertSQL) !== TRUE) {
+                echo "Error : " . $insertSQL . "<br>" . $conn->error;
+            }
+        }
+    }
+}
+
+function getExistingReportData($formID) {
+    $conn = connection();
+
+    $sql = "SELECT * FROM report WHERE form_id = $formID";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        // Data already exists for the form_id, return the existing data
+        return $result->fetch_assoc();
+    } else {
+        // No data exists for the form_id
+        return null;
+    }
+}
+
+function reportData($formID){
+    $conn = connection();
+
+    
+    $sql = "SELECT r.report_id, r.form_id, r.percentage, r.observers, f.form_name
+    FROM report r
+    LEFT JOIN form f ON r.form_id = f.form_id
+    WHERE r.form_id = $formID";
+
+    $result = $conn->query($sql);
+
+    return $result;
+}
 
 ?>

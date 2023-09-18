@@ -186,6 +186,8 @@ function importFaculty($worksheet) {
                 'faculty_id' => $facultyNo,
                 'employment_status' => $employment_status,
                 'user_id' => $userID,
+                'employment_date' => $employment_date,
+                'department' => $department,
                 'courses' => [],
             ];
         }
@@ -222,6 +224,8 @@ function importFaculty($worksheet) {
         $employment_status = $facultyData['employment_status'];
         $courses = $facultyData['courses'];
         $userID = $facultyData['user_id'];
+        $department = $facultyData['department'];
+        $employment_date = $facultyData['employment_date'];
         // $department and $employment_date are already defined
 
         // Encode JSON data
@@ -235,7 +239,7 @@ function importFaculty($worksheet) {
         $stmt = $conn->prepare($insertFacultySQL);
         $stmt->bind_param('isssss', $facultyID, $employment_status, $data, $userID, $department, $employment_date);
         $stmt->execute();
-
+        // echo $insertFacultySQL
         if (!$stmt->affected_rows > 0) {
             die('Error inserting faculty data: ' . $stmt->error);
         }

@@ -121,9 +121,9 @@
                         
                         <div class="form-check my-2 me-5">
                         <?php
-                            $roles = getRoles();
-
-                        foreach ($roles as $role) {
+                            $roles = userTypes();
+                            while($row = $roles->fetch_assoc()){
+                                $role = $row['user_type'];
                             ?>
                             <input class="form-check-input" name="respondents[]" type="checkbox" value="<?php echo $role; ?>" id="flexCheckDefault">
                             <label class="form-check-label" for="flexCheckDefault">

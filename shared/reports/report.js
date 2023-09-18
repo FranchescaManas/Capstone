@@ -1,6 +1,9 @@
 $(document).ready(function() {
-    // $('.icon.inputs').show();
+    toggleInputs();
     
+    
+
+
     function addObserver(content) {
         // var content = content.next();
        if(content.hasClass('content2')){
@@ -13,17 +16,7 @@ $(document).ready(function() {
             '<div class="row '+styles+'">'+
                 '<div class="col-4">'+
                 //insert a select dropdown
-                    '<select class="form-control">'+
-                        '<option>Option 1</option>'+
-                        '<option>Option 2</option>'+
-                        '<option>Option 3</option>'+
-                    '</select>'+
-                '</div>'+
-                '<div class="col-1">'+
-                    '<button class="minus" type="button">'+
-                        '<img src="https://cdn-icons-png.flaticon.com/512/12/12506.png"'+
-                            'alt="" width="28px" height="28px">'+
-                    '</button>'+
+                    select+
                 '</div>'+
                 '<div class="col-2" id="center">' + 
                         '<input type="number" class="inputs enabled" name="numberInput" min="1" max="100" value="5">%' +
@@ -35,11 +28,8 @@ $(document).ready(function() {
         );
        
     }
-    
-    
-    //create a function that toggles the visibility of the inputs
-    $('.icon.inputs').click(function() {
-        // prevent page from refreshing 
+
+    function toggleInputs() {
         $('.icon').toggle();
         // $('.inputs').show();
         if($('.icon').is(':visible')) {
@@ -52,8 +42,14 @@ $(document).ready(function() {
 
         }
 
-        $(this).removeClass('disabled').addClass('enabled');
-        $(this).show();
+        $('.icon.inputs').removeClass('disabled').addClass('enabled');
+        $('.icon.inputs').show();
+    }
+    
+    //create a function that toggles the visibility of the inputs
+    $('.icon.inputs').click(function() {
+        toggleInputs();
+        
     }   
     );
 
@@ -66,11 +62,77 @@ $(document).ready(function() {
         addObserver(content);
         console.log(content);
     });
+
+    //send an ajax to event-listener when save
+    $('#save-report').on('click', function() {
+        var data = [];
     
-    $('button.minus').on('click', function() {
-        alert('clicked');
+        // Iterate through each .row.head element
+        $('.row.head').each(function(index) {
+            var headRow = $(this);
+            var rowData = {
+                formID: headRow.attr('id'),
+                formPercentage: headRow.find('input').val(),
+                observers: []
+            };
+    
+            // Find the following rows until the next .row.head
+            var siblingRows = headRow.nextUntil('.row.head').filter(':not(.row.head)');
+    
+            // Check if the current .row.head is the last one
+            if (index === $('.row.head').length - 1) {
+                siblingRows = headRow.nextAll().filter(':not(.row.head)');
+            }
+    
+            siblingRows.each(function() {
+                var row = $(this);
+                var observer = row.find('select').val();
+                var percentage = row.find('input').val();
+    
+                // Check if observer is not empty before adding to the array
+                if (observer) {
+                    var observerData = {
+                        observer: observer,
+                        percentage: percentage
+                    };
+                    rowData.observers.push(observerData);
+                }
+            });
+    
+            data.push(rowData);
+        });
+    
+        //send ajax
+
+        $.ajax({
+            url: '../forms/event-listener.php',
+            type: 'POST',
+            data:{ 
+                data: JSON.stringify(data),
+                action: JSON.stringify({ 'action': "save report", 'role': 'superadmin'})
+            },
+            success: function(response) {
+                var cleanedResponse = response.replace(/\s/g, '');
+                console.log(cleanedResponse);
+                if(cleanedResponse === 'success'){
+                    
+                    window.location.reload();
+                }
+
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
     });
-    // if the minus button is clicked, remove the row
+    
+    $('#professor').on('change', function () {
+        var selectedOption = $(this).find('option:selected');
+        var department = selectedOption.data('department');
+        $('#department').text(department);
+    });
+    
+  
 
     
     
