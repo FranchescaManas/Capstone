@@ -23,8 +23,8 @@ $role = $_SESSION['role'];
         foreach ($formId as $f_id) {
             $access = $form->checkAccess($f_id, $role);
             $accessData[$f_id] = $access;
-
             if ($access !== 'no access') {
+               
                 $form->loadFormsGroup($f_id, $access);
             }
 

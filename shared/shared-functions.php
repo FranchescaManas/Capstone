@@ -828,44 +828,15 @@ function getScaleOverall() {
             }
         }
     }
-
-    $averageScore = $totalScore / $totalResponses;
+    if($totalResponses != 0){
+        $averageScore = $totalScore / $totalResponses;
+    }else{
+        $averageScore = 0;
+    }
     $averageScore = round($averageScore, 2);
     return $averageScore;
 }
 
-
-function computeForm($formID, $percentage){
-    $conn = connection();
-
-    $sql = "SELECT * FROM `form_response` WHERE `response_type` = 'scale' and `form_id` = $formID";
-    $result = $conn->query($sql);
-
-    $totalScore = 0;
-    $totalResponses = 0;
-
-    while($row = $result->fetch_assoc()) {
-        // get all the scale responses from the json "value" key
-        $scaleResponses = json_decode($row['response_value'], true)['value'];
-        // print_r($scaleResponses);
-        //iterate through the nested json array
-        foreach($scaleResponses as $scaleResponse) {
-            foreach($scaleResponse as $key => $value){
-                $totalScore += $value;
-                $totalResponses++;
-            }
-        }
-    }
-
-    $averageScore = $totalScore / $totalResponses;
-    $averageScore = round($averageScore, 2);
-    
-    $percentageResult = ($averageScore / 100) * $percentage;
-
-    // Assuming you want to return the percentage result
-    return $percentageResult;
-
-}
 
 function userTypes(){
     $conn = connection();
