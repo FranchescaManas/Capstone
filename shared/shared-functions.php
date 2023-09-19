@@ -29,7 +29,7 @@ function getRole()
     $eval_date = $formData['submission_date'];
     $targetID = $formData['target_id'];
 
-    $responseSQL = "INSERT INTO form_response (`form_id`, `user_id`, `question_id`, `response_value`, `response_type`) VALUES ";
+    $responseSQL = "INSERT INTO form_response (`form_id`, `user_id`, `question_id`, `response_value`, `response_type`, `target_id`, `role`) VALUES ";
 
     // Handle different question types and their respective response values
     foreach ($responses as $response) {
@@ -65,7 +65,7 @@ function getRole()
         $response = mysqli_real_escape_string($conn, $response);
 
         // Prepare the SQL statement
-        $values[] = "($formID, $userID, $questionID, '$response', '$questionType')";
+        $values[] = "($formID, $userID, $questionID, '$response', '$questionType', $targetID, '$role')";
     }
 
     $responseSQL .= implode(",", $values);
@@ -209,6 +209,15 @@ function deleteForm($formID)
     if ($conn->query($deleteForm) === FALSE) {
         echo "Error deleting from form: " . $conn->error;
     }
+    $deleteResponse = "DELETE FROM form_response WHERE form_id = '$formID'";
+    if ($conn->query($deleteResponse) === FALSE) {
+        echo "Error deleting from form: " . $conn->error;
+    }
+    $deleteEvaluation = "DELETE FROM evaluation WHERE form_id = '$formID'";
+    if ($conn->query($deleteEvaluation) === FALSE) {
+        echo "Error deleting from form: " . $conn->error;
+    }
+    
 
     $conn->close();
 
@@ -835,6 +844,38 @@ function getScaleOverall() {
     }
     $averageScore = round($averageScore, 2);
     return $averageScore;
+}
+
+function getObserverScore($targetID, $formID, $percent, $observer){
+    $conn = connection();
+    // left join the query where it will look for the evaluator based on role
+    $sql = "SELECT * FROM form_response WHERE `target_id` = $targetID AND `form_id` = $formID AND `response_type` = 'scale'
+    AND `role` = '$observer';"; 
+    $totalScore = 0;
+    $totalResponses = 0;
+
+    $result = $conn->query($sql);
+
+    while($row = $result->fetch_assoc()) {
+        // get all the scale responses from the json "value" key
+        $scaleResponses = json_decode($row['response_value'], true)['value'];
+        // print_r($scaleResponses);
+        //iterate through the nested json array
+        foreach($scaleResponses as $scaleResponse) {
+            foreach($scaleResponse as $key => $value){
+                $totalScore += $value;
+                $totalResponses++;
+            }
+        }
+    }
+    if($totalResponses != 0){
+        $averageScore = $totalScore / $totalResponses;
+        $score = $averageScore  * $percent;
+    }else{
+        $score = 0;
+    }
+    $score = round($score, 2);
+    return $score;
 }
 
 
