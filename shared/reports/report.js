@@ -1,8 +1,8 @@
 $(document).ready(function() {
     toggleInputs();
     
-    
-
+    changeFaculty();
+    // compute();
 
     function addObserver(content) {
         // var content = content.next();
@@ -27,6 +27,48 @@ $(document).ready(function() {
             '</div>'
         );
        
+    }
+
+
+    function compute(){
+        var targetID = $('#professor').val();
+        ///find all .row.content after row.head
+        $('.row.head').each(function(index) {
+            var formID = $(this).attr('id');
+            //find all .row.content after row.head
+            var siblingRows = $(this).nextUntil('.row.head').filter(':not(.row.head)');
+            // Check if the current .row.head is the last one
+            if (index === $('.row.head').length - 1) {
+                siblingRows = $(this).nextAll().filter(':not(.row.head)');
+            }
+            $(siblingRows).each(function(){
+                var row = $(this);
+                var percentage = row.find('input').val();
+                var user = row.find('select').val();
+                if(user){
+                    $.ajax({
+                        url: './load.php',
+                        type: 'POST',
+                        data: {
+                            targetID: targetID,
+                            formID: formID,
+                            percent: percentage,
+                            observer: user
+                        },
+                        success: function (response) {
+                            row.find('.rating').text(response);
+                            
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                }
+            }
+            );
+        
+        });
+        
     }
 
     function toggleInputs() {
@@ -125,11 +167,17 @@ $(document).ready(function() {
             }
         });
     });
-    
-    $('#professor').on('change', function () {
-        var selectedOption = $(this).find('option:selected');
+
+    function changeFaculty(){
+        var selectedOption = $('#professor').find('option:selected');
         var department = selectedOption.data('department');
         $('#department').text(department);
+        compute();
+
+    }
+    
+    $('#professor').on('change', function () {
+        changeFaculty();
     });
     
   

@@ -137,7 +137,7 @@ $role = strtolower($_SESSION['role']);
     //         }
             
     //     }
-        // print_r($_POST);
+        print_r($_POST);
         if(isset($_POST['viewForm']))
         {
             $formId = $_POST['viewForm'];
@@ -149,7 +149,14 @@ $role = strtolower($_SESSION['role']);
             $targetID = $_POST['target_id'];
             $formName = $form->getFormName($formId);
             formContent($formId, $form, 'evaluate');
-            
+            ?>
+            <script>
+                var formID = <?php echo json_encode($formId); ?>;
+                var userID = <?php echo json_encode($userID); ?>;
+                var role = <?php echo json_encode($role); ?>;
+                var targetID = <?php echo json_encode($targetID); ?>;
+            </script>
+            <?php
         }
         
         else //if forms are not for viewing, but for responding/modifying

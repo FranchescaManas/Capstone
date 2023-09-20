@@ -4,6 +4,7 @@ session_start();
 
 $userID = $_SESSION['user_id'];
 $role = $_SESSION['role'];
+
 ?>
 
 <!DOCTYPE html>
@@ -87,11 +88,12 @@ $role = $_SESSION['role'];
             background-color: transparent !important;
         }
 
-        .icon{
+        .icon {
             background-color: transparent !important;
             width: fit-content !important;
         }
-        .minus-row{
+
+        .minus-row {
             background-color: transparent !important;
             width: fit-content !important;
         }
@@ -107,7 +109,7 @@ $role = $_SESSION['role'];
 
     <?php
     // include '../connection.php';
-    include '../navbar.php';
+    // include '../navbar.php';
     // include_once '../connection.php';
     include '../shared-functions.php';
 
@@ -117,10 +119,10 @@ $role = $_SESSION['role'];
     $select = [];
     $selectData = userTypes();
 
-    
+
     $selectOptions = '<select class="form-control inputs" style="width: fit-content !important">';
     while ($row = $selectData->fetch_assoc()) {
-        print_r($row);
+        // print_r($row);
         // Include department as a data attribute
         $selectOptions .= '<option>' . $row['user_type'] . '</option>';
     }
@@ -141,26 +143,28 @@ $role = $_SESSION['role'];
         </div>
         <div class="report-header" style=" ">
 
-            <div class="col" style="text-align: left; ">
+
+            <div class="col" style="text-align: left;">
                 <b>Faculty: </b>
                 <select name="faculty_report" id="professor" class="rounded">
-                            
                     <?php
-                        while ($row = $faculty->fetch_assoc()) {
-                            // Include department as a data attribute
-                            echo '<option value="' . $row['faculty_id'] . '" data-department="' . $row['department'] . '">' . $row['firstname'] . ' ' . $row['lastname'] . '</option>';
-                        }
+                    while ($row = $faculty->fetch_assoc()) {
+                        // Include department as a data attribute
+                        echo '<option value="' . $row['faculty_id'] . '" data-department="' . $row['department'] . '">' . $row['firstname'] . ' ' . $row['lastname'] . '</option>';
+                    }
                     ?>
-                            
-                        </select>
-                </br></br>
-                
+                </select>
+                <br /><br />
+
             </div>
+
+
             <div class="col" style="text-align: right;">
                 <div>
-                    <b>Department: </b><p id="department">-- </p>
+                    <b>Department: </b>
+                    <p id="department">-- </p>
                 </div>
-                
+
                 <!-- <b>Date of Class/Observation: -----</b></br></br>
                 <b>Evaluation Period: ----</b> -->
             </div>
@@ -169,106 +173,115 @@ $role = $_SESSION['role'];
 
         <section class="flex-between flex-wrap">
 
-        <form action="javascript:void(0)" method="post" class="w-100 d-flex flex-column align-items-center">
+            <form action="javascript:void(0)" method="post" class="w-100 d-flex flex-column align-items-center">
 
-            <div class="form-schedule-card">
+                <div class="form-schedule-card">
 
-                <div class="d-flex flex-column form-schedule-row">
-                    <div class="row" style="font-weight: 500; font-size: 18px;">
-                        <div class="col-1">
-                            ELEMENTS
-                        </div>
-                        <div class="col-8">
-                        </div>
-                        <div class="col-2">
-                            RATING
-                        </div>
-                        <div class="col-1">
-                            TOTAL
-                        </div>
-                    </div>
-
-                    <?php
-                    $forms = getForms();
-                    
-                    foreach ($forms as $id => $name) {
-                        ?>
-                        <div class="row head" id="<?= $id ?>">
-                            <div class="col-4">
-                                <?= $name ?>
+                    <div class="d-flex flex-column form-schedule-row">
+                        <div class="row" style="font-weight: 500; font-size: 18px;">
+                            <div class="col-1">
+                                ELEMENTS
+                            </div>
+                            <div class="col-8">
+                            </div>
+                            <div class="col-2">
+                                RATING
                             </div>
                             <div class="col-1">
-                                <button class="icon">
-                                    <img src="https://cdn.icon-icons.com/icons2/2761/PNG/512/plus_insert_add_rectangle_icon_176436.png"
-                                        alt="" width="28px" height="28px">
-                                </button>
-                            </div>
-                            <div class="col-2" id="center">
-                                <?php
-                                $reportData = reportData($id);
-                                //get the r.percentage from getreportData($formID)
-                                if ($reportData->num_rows > 0) {
-                                    while ($row = $reportData->fetch_assoc()) {
-                                        $percentage = $row['percentage'];
-                                        $observers = json_decode($row['observers'], true);
-                                        echo '<input type="number" class="inputs enabled" name="numberInput" min="0" max="100" value="' . $percentage . '" >%';
-                                        
-                                
-                                        ?>
-                                        
-                                        <script>
-                                            $(document).ready(function(){
-                                                var observers = <?php echo json_encode($observers); ?>;
-                                                var select = <?php echo json_encode($selectOptions); ?>;
-                                                //get the closest .row.head
-                                                console.log(observers);
-                                                if(observers !== null){
-                                                    //loop through observers array
-                                                    for(var i = 0; i < observers.length; i++){
-                                                       observer = observers[i];
-                                                       user = observer.observer;
-                                                       percentage = observer.percentage;
-                                                       rowhead = $('#<?= $id ?>');
-                                                         rowhead.after('<div class="row content"><div class="col-4" id="center">'+select+'</div><div class="col-1" id="center"></div><div class="col-2" id="center"><input type="number" class="inputs disabled" name="numberInput" min="0" max="100" value="'+percentage+'" >%</div><div class="col-1" id="center">---</div></div>');
-                                                    }
-                                                    
-                                                    
-                                                }
-                                            
-                                            });
-                                        </script>
-                                        <?php
-                                        
-                                    }
-                                } else {
-                                    // If no rows are found, display the input field with a default value of 0
-                                    echo '<input type="number" class="inputs enabled" name="numberInput" min="0" max="100" value="0" >%';
-                                }
-                                ?>
-                            </div>
-                            <div class="col-4" id="center"></div>
-                            <div class="col-1" id="center">
-                                ---
+                                TOTAL
                             </div>
                         </div>
+
                         <?php
-                    }
-                    ?>
+                        $forms = getForms();
+
+                        foreach ($forms as $id => $name) {
+                            ?>
+                            <div class="row head" id="<?= $id ?>">
+                                <div class="col-4">
+                                    <?= $name ?>
+                                </div>
+                                <div class="col-1">
+                                    <button class="icon">
+                                        <img src="https://cdn.icon-icons.com/icons2/2761/PNG/512/plus_insert_add_rectangle_icon_176436.png"
+                                            alt="" width="28px" height="28px">
+                                    </button>
+                                </div>
+                                <div class="col-2" id="center">
+                                    <?php
+                                    $reportData = reportData($id);
+
+                                    if ($reportData->num_rows > 0) {
+                                        while ($row = $reportData->fetch_assoc()) {
+                                            $percentage = $row['percentage'];
+                                            $observers = json_decode($row['observers'], true);
+
+                                            echo '<input type="number" class="inputs enabled" name="numberInput" min="0" max="100" value="' . $percentage . '" >%';
+
+                                            ?>
+
+                                            <script>
+                                                $(document).ready(function () {
+
+                                                    var observers = <?php echo json_encode($observers); ?>;
+                                                    var select = <?php echo json_encode($selectOptions); ?>;
+                                                    var formID = <?php echo json_encode($id); ?>;
+
+                                                    if (observers !== null) {
+                                                        for (var i = 0; i < observers.length; i++) {
+                                                            observer = observers[i];
+                                                            user = observer.observer;
+                                                            percentage = observer.percentage;
+                                                            var rowhead = $('#<?= $id ?>');
+                                                            
+                                                            var observerElement = $('<div class="row content"></div>');
+                                                            observerElement.append('<div class="col-4" id="center">' + select + '</div>');
+                                                            observerElement.append('<div class="col-1" id="center"></div>');
+                                                            observerElement.append('<div class="col-2" id="center"><input type="number" class="inputs disabled" name="numberInput" min="0" max="100" value="' + percentage + '">%</div>');
+                                                            observerElement.append('<div class="col-1 rating" id="center">--</div>');
+
+                                                            rowhead.after(observerElement);
+
+                                                            observerElement.find('select').val(user);
+
+                                                        }
+                                                    }
+                                                });
+                                            </script>
+
+                                            <?php
+                                            
+                                        }
+                                    } else {
+                                        // If no rows are found, display the input field with a default value of 0
+                                        echo '<input type="number" class="inputs enabled" name="numberInput" min="0" max="100" value="0" >%';
+                                    }
+                                    ?>
+                                </div>
+
+                                <div class="col-4" id="center"></div>
+                                <div class="col-1" id="center">
+                                    ---
+                                </div>
+                            </div>
+                            <?php
+                        }
+                        ?>
 
 
-                    </br></br>
-                    <h4 id="center">
-                        <p>OVERALL: ---</p>
-                    </h4>
+                        </br></br>
+                        <h4 id="center">
 
-                    
-                    <button type="submit" name="save-report" id="save-report"
-                        class="rounded-pill py-1 align-self-center">Save</button>
+                        </h4>
+
+
+                        <button type="submit" name="save-report" id="save-report"
+                            class="rounded-pill py-1 align-self-center">Save</button>
+                    </div>
+
                 </div>
 
-            </div>
-
-            </div>
+                </div>
 
             </form>
 
@@ -286,6 +299,7 @@ $role = $_SESSION['role'];
     <script src="../reports/report.js"></script>
     <script>
         var select = <?php echo json_encode($selectOptions); ?>;
+
     </script>
 
 </body>

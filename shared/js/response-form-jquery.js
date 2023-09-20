@@ -1,6 +1,8 @@
 
 $(document).ready(function(){
-    // console.log(targetID);
+    
+    
+
     function adjustButton(){
         var submit_btn = $('#form').find('#response-submit');
         submit_btn.css('width', '70%');

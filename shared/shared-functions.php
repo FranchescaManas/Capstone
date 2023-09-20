@@ -848,34 +848,90 @@ function getScaleOverall() {
 
 function getObserverScore($targetID, $formID, $percent, $observer){
     $conn = connection();
+    $percent = $percent / 100;
+
     // left join the query where it will look for the evaluator based on role
-    $sql = "SELECT * FROM form_response WHERE `target_id` = $targetID AND `form_id` = $formID AND `response_type` = 'scale'
-    AND `role` = '$observer';"; 
-    $totalScore = 0;
-    $totalResponses = 0;
+    $sql = "SELECT
+                fq.form_id,
+                fq.question_text AS scale_text,
+                JSON_LENGTH(JSON_EXTRACT(fq.options, '$.scale-labels')) AS number_of_labels,
+                fr.user_id,
+                fr.response_value
+            FROM
+                form_question fq
+            LEFT JOIN
+                (
+                    SELECT
+                        *
+                    FROM
+                        form_response
+                    WHERE
+                        `target_id` = $targetID
+                        AND `response_type` = 'scale'
+                        AND `role` = '$observer'
+                ) fr
+            ON
+                fq.form_id = fr.form_id
+                AND fq.question_id = fr.question_id
+            WHERE
+                fq.question_type = 'scale' and
+                fq.form_id = $formID;"; 
+            $totalScore = 0;
+            $scaleCount = 0;
+            // $totalResponses = 0;
 
-    $result = $conn->query($sql);
+            $result = $conn->query($sql);
+            //for each scale in form compute the average score
+            // you will need the number of labels to get the average score
+            // if ($result->num_rows === 0) {
+            //     return 0; // No data found, return 0
+            // }
+            while($row = $result->fetch_assoc()) {
+                // get all the scale responses from the json "value" key
+                
+                
+                if($row['response_value'] !== null){
+                    $scaleResponses = json_decode($row['response_value'], true)['value'];
+                }else{
+                    return 0;
+                }
+                $maxScore = $row['number_of_labels'];
+                //convert maxScore to int
+                $maxScore = (int)$maxScore;
+                $scaleCount++;
+                // echo $maxScore;
+                //compute the average score
+                $scaleScore = 0;
+                $scaleReponses = 0;
+                $scaleAverage = 0;
+                $scalePercentage = 0;
+                // echo $row['scale_text']. "<br>";
+                foreach($scaleResponses as $scaleResponse) {
+                    
+                    foreach($scaleResponse as $key => $value){
+                        // echo "value: " . $value . "<br>";
+                        $scaleScore += $value;
+                        $scaleReponses++;
+                    }
+                }
+                // echo "total: " . $scaleScore . "<br>";
+                // echo "total responses: " .  $scaleReponses . "<br>";
+                $scaleAverage = $scaleScore / $scaleReponses ;
+                // echo "scale average: " . $scaleAverage . "<br>";
+                // echo "max score: " . $maxScore . "<br>";
 
-    while($row = $result->fetch_assoc()) {
-        // get all the scale responses from the json "value" key
-        $scaleResponses = json_decode($row['response_value'], true)['value'];
-        // print_r($scaleResponses);
-        //iterate through the nested json array
-        foreach($scaleResponses as $scaleResponse) {
-            foreach($scaleResponse as $key => $value){
-                $totalScore += $value;
-                $totalResponses++;
+                $scalePercentage = ($scaleAverage / $maxScore) * 100;
+
+                // echo "scale percentage: " . $scalePercentage . "<br>";
+                $totalScore += $scalePercentage;
             }
-        }
-    }
-    if($totalResponses != 0){
-        $averageScore = $totalScore / $totalResponses;
-        $score = $averageScore  * $percent;
-    }else{
-        $score = 0;
-    }
-    $score = round($score, 2);
-    return $score;
+        // echo "total score: " . $totalScore . "<br>";
+        // echo "total average: " . $scaleCount . "<br>";
+        $totalAverage = $totalScore / $scaleCount;
+        // echo "total average: " . $totalAverage . "<br>";
+        $observerRating = $totalAverage * $percent;
+        return $observerRating;
+        
 }
 
 
