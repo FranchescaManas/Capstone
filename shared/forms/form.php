@@ -137,7 +137,7 @@ $role = strtolower($_SESSION['role']);
     //         }
             
     //     }
-        print_r($_POST);
+        // print_r($_POST);
         if(isset($_POST['viewForm']))
         {
             $formId = $_POST['viewForm'];
@@ -186,7 +186,7 @@ $role = strtolower($_SESSION['role']);
                     //if there is no set target id 
                     else
                     {   
-                        print_r($_POST);
+                        // print_r($_POST);
                         // if target page was set, get the id and load the form
                         if(isset($_POST['start_eval']))
                         {
@@ -219,7 +219,7 @@ $role = strtolower($_SESSION['role']);
             //if there are more than 1 form
             else
             {
-                print_r($formId);
+                // print_r($formId);
                 if($role === 'superadmin')
                 {
                     header('location: ../../' . $role . '/index.php?page=forms');

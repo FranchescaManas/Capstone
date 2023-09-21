@@ -108,22 +108,16 @@ $role = $_SESSION['role'];
 <body>
 
     <?php
-    // include '../connection.php';
-    // include '../navbar.php';
-    // include_once '../connection.php';
+    include '../navbar.php';
     include '../shared-functions.php';
 
     $faculty = facultyData();
-
-    //create a function that will add data to the select from database
     $select = [];
     $selectData = userTypes();
 
-
     $selectOptions = '<select class="form-control inputs" style="width: fit-content !important">';
     while ($row = $selectData->fetch_assoc()) {
-        // print_r($row);
-        // Include department as a data attribute
+       
         $selectOptions .= '<option>' . $row['user_type'] . '</option>';
     }
     $selectOptions .= '</select>';
@@ -134,7 +128,7 @@ $role = $_SESSION['role'];
 
 
         <div style="text-align: right; margin: 2% 11% 2% 10%;">
-            <a href="">
+            <a href="#" id="print">
                 <img src="../../assets/images/print.png" alt="Print" style="width:28px;height:28px;">
             </a>
             <button class="icon inputs" id="edit-report">
@@ -149,7 +143,6 @@ $role = $_SESSION['role'];
                 <select name="faculty_report" id="professor" class="rounded">
                     <?php
                     while ($row = $faculty->fetch_assoc()) {
-                        // Include department as a data attribute
                         echo '<option value="' . $row['faculty_id'] . '" data-department="' . $row['department'] . '">' . $row['firstname'] . ' ' . $row['lastname'] . '</option>';
                     }
                     ?>
@@ -238,7 +231,8 @@ $role = $_SESSION['role'];
                                                             observerElement.append('<div class="col-4" id="center">' + select + '</div>');
                                                             observerElement.append('<div class="col-1" id="center"></div>');
                                                             observerElement.append('<div class="col-2" id="center"><input type="number" class="inputs disabled" name="numberInput" min="0" max="100" value="' + percentage + '">%</div>');
-                                                            observerElement.append('<div class="col-1 rating" id="center">--</div>');
+                                                            observerElement.append('<div class="col-3 rating text-end" id=""></div>');
+                                                            observerElement.append('<div class="col-2" id="center"></div>');
 
                                                             rowhead.after(observerElement);
 
@@ -260,8 +254,8 @@ $role = $_SESSION['role'];
                                 </div>
 
                                 <div class="col-4" id="center"></div>
-                                <div class="col-1" id="center">
-                                    ---
+                                <div class="col-1 rowtotal" id="center">
+                                    --
                                 </div>
                             </div>
                             <?php
@@ -270,8 +264,8 @@ $role = $_SESSION['role'];
 
 
                         </br></br>
-                        <h4 id="center">
-
+                        <h4 id="center" class="totalScore">
+                        Overall: 
                         </h4>
 
 

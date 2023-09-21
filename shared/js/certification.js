@@ -10,7 +10,31 @@ $(document).ready(function() {
         var certId = $(this).attr('data-cert-id');
         $('.certificateModal').modal('show');
         $('.certificate-action').attr('style', 'display: none !important'); 
-        console.log(certId);     
+        $.ajax({
+            type: 'POST',
+            url: '../shared/forms/event-listener.php', // URL to your PHP script
+            data: {
+            certData: JSON.stringify({certId: certId})
+        },
+            
+            success: function(response){
+                data=$.parseJSON(response);
+                console.log(data);
+                $('#name').val(data.name);
+                $('#title').val(data.title);
+                $('#provider').val(data.issued_by);
+                var formattedDate = moment(data.date_certified).format('YYYY-MM-DD');
+                $('#dateCertified').val(formattedDate);
+                //display blob image given the imagecontent only that was sent through json
+                $('#imagePreview').html('<img src="data:image/jpeg;base64,'+data.image+'" style="max-width: 100%;">');
+               
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+        
+
     });
     $(document).on('click', '#uploadCertificateBtn', function(){
         event.preventDefault();

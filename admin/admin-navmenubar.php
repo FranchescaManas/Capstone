@@ -18,6 +18,7 @@
         <li class="sidebar-item">
             <a href="./index.php?page=students">Students</a>
         </li>
+        
         </li>
         <?php
         $form = new Form;
@@ -31,6 +32,9 @@
             <?php
         }
             ?>
+        <li class="sidebar-item">
+            <a href="../shared/reports/report.php">Reports</a>
+        </li>
     </ul>
 
     <div class="account-details d-flex flex-column justify-content-center align-items-center">

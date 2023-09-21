@@ -3,11 +3,30 @@
         <div class="page-title flex-start">
             <h2>Classroom Observation</h2>
             <select name="observation-role" id="observation-role" class="my-2">
-                <option value="Dean">Dean</option>
-                <option value="Department Chair">Department Chair</option>
+            <?php
+            
+            $admin = userTypes();
+
+            while ($row = $admin->fetch_assoc()) {
+                $role = $row['role'];
+                if($role === 'admin'){
+                    $user = $row['user_type'];
+                    echo "<option value='$user'>$user</option>";
+                }
+            }
+            
+            ?>
+        
             </select>
+
         </div>
         <div class="d-flex flex-wrap justify-content-between">
+            <?php
+            
+            // $scores = perScale($_SESSION['user_id'], $formID, $_SESSION['user_type']);
+            
+            ?>
+
             <div class="score-card">
                 <h1>4</h1>
                 <p>Quality</p>

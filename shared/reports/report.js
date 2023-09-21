@@ -32,8 +32,10 @@ $(document).ready(function() {
 
     function compute(){
         var targetID = $('#professor').val();
-        ///find all .row.content after row.head
+        var overAlLScore = 0;
         $('.row.head').each(function(index) {
+            var rowhead = $(this);
+            var rowtotal = 0;
             var formID = $(this).attr('id');
             //find all .row.content after row.head
             var siblingRows = $(this).nextUntil('.row.head').filter(':not(.row.head)');
@@ -56,8 +58,14 @@ $(document).ready(function() {
                             observer: user
                         },
                         success: function (response) {
+                            response = Number(JSON.parse(response));
+                            rowtotal += response;
                             row.find('.rating').text(response);
-                            
+                            rowhead.find('.rowtotal').text(rowtotal);
+                            overAlLScore += response;
+    
+                            // Round overall score to 2 decimal places
+                            $('.totalScore').text('Overall: ' + overAlLScore.toFixed(2));
                         },
                         error: function (error) {
                             console.log(error);
@@ -179,6 +187,11 @@ $(document).ready(function() {
     $('#professor').on('change', function () {
         changeFaculty();
     });
+    $('#print').on('click', function () {
+        event.preventDefault();
+        window.print();
+    }
+    );
     
   
 

@@ -369,7 +369,7 @@ function updateForm($formData)
     }
 
 
-    print_r($formData);
+    // print_r($formData);
     foreach ($formData['data'] as $item) {
 
 
@@ -845,6 +845,68 @@ function getScaleOverall() {
     $averageScore = round($averageScore, 2);
     return $averageScore;
 }
+function perScale($targetID, $formID, $observer = '*'){
+    $conn = connection();
+    $sql = "SELECT
+                fq.form_id,
+                fq.question_text AS scale_text,
+                JSON_LENGTH(JSON_EXTRACT(fq.options, '$.scale-labels')) AS number_of_labels,
+                fr.user_id,
+                fr.response_value
+            FROM
+                form_question fq
+            LEFT JOIN
+                form_response fr
+            ON
+                fq.form_id = fr.form_id
+                AND fq.question_id = fr.question_id
+            WHERE
+                fq.question_type = 'scale'
+                AND fq.form_id = $formID
+                AND fr.target_id = $targetID
+                AND fr.response_type = 'scale'
+                " . ($observer !== "*" ? "AND `role` = '$observer'" : "") . ";"; 
+
+    $result = $conn->query($sql);
+    return $result;
+}
+
+function getComments($targetID, $formID, $observer = '*'){
+    $conn = connection();
+    $sql = "SELECT
+                fq.form_id,
+                fq.question_text AS question,
+                fr.user_id,
+                fr.response_value
+            FROM
+                form_question fq
+            LEFT JOIN
+                form_response fr
+            ON
+                fq.form_id = fr.form_id
+                AND fq.question_id = fr.question_id
+            WHERE
+                fq.question_type = 'paragraph'
+                AND fq.form_id = $formID
+                AND fr.target_id = $targetID
+                AND fr.response_type = 'scale'
+                " . ($observer !== "*" ? "AND `role` = '$observer'" : "") . ";"; 
+
+    $result = $conn->query($sql);
+    return $result;
+}
+function formPage($targetID){
+    $conn = connection();
+    $sql = "SELECT DISTINCT form_id, role
+    FROM form_response
+    WHERE target_id = $targetID";
+    
+
+    $result = $conn->query($sql);
+    return $result;
+    
+}
+
 
 function getObserverScore($targetID, $formID, $percent, $observer){
     $conn = connection();
@@ -878,58 +940,49 @@ function getObserverScore($targetID, $formID, $percent, $observer){
                 fq.form_id = $formID;"; 
             $totalScore = 0;
             $scaleCount = 0;
-            // $totalResponses = 0;
+
 
             $result = $conn->query($sql);
-            //for each scale in form compute the average score
-            // you will need the number of labels to get the average score
-            // if ($result->num_rows === 0) {
-            //     return 0; // No data found, return 0
-            // }
+    
             while($row = $result->fetch_assoc()) {
-                // get all the scale responses from the json "value" key
-                
-                
+
                 if($row['response_value'] !== null){
                     $scaleResponses = json_decode($row['response_value'], true)['value'];
                 }else{
                     return 0;
                 }
                 $maxScore = $row['number_of_labels'];
-                //convert maxScore to int
+  
                 $maxScore = (int)$maxScore;
                 $scaleCount++;
-                // echo $maxScore;
-                //compute the average score
+   
                 $scaleScore = 0;
                 $scaleReponses = 0;
                 $scaleAverage = 0;
                 $scalePercentage = 0;
-                // echo $row['scale_text']. "<br>";
+      
                 foreach($scaleResponses as $scaleResponse) {
                     
                     foreach($scaleResponse as $key => $value){
-                        // echo "value: " . $value . "<br>";
+       
                         $scaleScore += $value;
                         $scaleReponses++;
                     }
                 }
-                // echo "total: " . $scaleScore . "<br>";
-                // echo "total responses: " .  $scaleReponses . "<br>";
+
                 $scaleAverage = $scaleScore / $scaleReponses ;
-                // echo "scale average: " . $scaleAverage . "<br>";
-                // echo "max score: " . $maxScore . "<br>";
 
                 $scalePercentage = ($scaleAverage / $maxScore) * 100;
 
-                // echo "scale percentage: " . $scalePercentage . "<br>";
                 $totalScore += $scalePercentage;
             }
-        // echo "total score: " . $totalScore . "<br>";
-        // echo "total average: " . $scaleCount . "<br>";
+
         $totalAverage = $totalScore / $scaleCount;
-        // echo "total average: " . $totalAverage . "<br>";
+
         $observerRating = $totalAverage * $percent;
+
+        $observerRating = round($observerRating, 2);
+
         return $observerRating;
         
 }

@@ -12,7 +12,10 @@
         <li class="sidebar-item">
             <a href="./index.php?page=dashboard">Dashboard</a>
         </li>
-        <li class="sidebar-item">
+        <?php
+        
+        ?>
+        <!-- <li class="sidebar-item">
             <a href="./index.php?page=classroom">Classroom Observation</a>
         </li>
         <li class="sidebar-item">
@@ -20,7 +23,7 @@
         </li>
         <li class="sidebar-item">
             <a href="./index.php?page=feedback">Student Feedback</a>
-        </li>
+        </li> -->
         <li class="sidebar-item">
             <a href="./index.php?page=certification">Certificates</a>
         </li>
@@ -29,6 +32,29 @@
         $form = new Form;
 
         $formcount = $form->getFormID($_SESSION['user_id'], $_SESSION['role']);
+        $formPage = formPage(getUsername());
+
+        while ($row = $formPage->fetch_assoc()) {
+            //if row is not empty
+            if(!empty($row)){
+                $formId = $row['form_id'];
+                $formName = getFormName($formId);
+                $formName = strtolower($formName);
+                ?>
+                <li class="sidebar-item">
+                    <a href="./index.php?page=result&fid=<?=$formId?>"><?=$formName?></a>
+                </li>
+                <?php
+            }
+            else{
+                break;
+           }
+                
+        }
+
+
+
+        
 
         if (count($formcount) >= 1)  {
             ?>

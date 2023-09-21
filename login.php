@@ -15,7 +15,7 @@ function login($username, $password){
             
             if(password_verify($password, $user_row['password'])){
                 
-                print_r($user_row);
+                // print_r($user_row);
 
                 // SESSION VARIABLES
 
