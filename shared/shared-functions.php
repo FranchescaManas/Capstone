@@ -1109,26 +1109,43 @@ function studentCount($user_id){
      JSON_UNQUOTE(JSON_EXTRACT(data, '$.courses[*].faculty_id')) AS faculty_id FROM 
      student";
   
-    $result = $conn->query($sql);
-  
-    if($result){
-      
-        while ($row = $result->fetch_assoc()) {
-            
-            //   $professorsArray = json_decode($row['faculty_name']); // Corrected variable name
-            $facultyID = json_decode($row['faculty_id']);
-            
-            foreach($facultyID as $id => $f_id){
-                if($user_id == $f_id){
-                    $student_count += 1;
+    
+    //create try catch for query
+    try {
+        $result = $conn->query($sql);
+        if($result){
+            // Check if any rows were found
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $facultyID = json_decode($row['faculty_id']);
+                    // Check if $facultyID is a valid array
+                    if (is_array($facultyID)) {
+                        foreach($facultyID as $id => $f_id){
+                            if($user_id == $f_id){
+                                $student_count += 1;
+                            }
+                        }
+                    }
                 }
+                
+                return $student_count;
+            } else {
+                // No rows found, you can return a specific value or throw an exception
+                // In this example, we return 0 to indicate no rows found
+                return 0;
             }
+        } else {
+            // Handle query execution error if needed
+            // You can return an error code or throw an exception
+            // In this example, we return 0 to indicate an error
+            return 0;
         }
-
-        return $student_count;
+    } catch (Exception $e) {
+        // Handle the exception here, you can log it or return an error code
+        return 0;
     }
-      
 }
+
 
 function respodentcount($id){
     $conn = connection();
