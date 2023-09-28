@@ -7,30 +7,33 @@
         </div>
         <div class="d-flex flex-wrap justify-content-between">
             <?php
+            $studentCount = studentCount(getUsername());
+            $certificates = certificateData($_SESSION['user_id']);
+            $respondent = respodentcount(getUsername());
             
             
-            
+          
             ?>
 
             <div class="score-card">
-                <h1>4</h1>
-                <p>Quality</p>
+                <h1><?= $respondent?></h1>
+                <p>No. Repondents</p>
             </div>
             <div class="score-card">
-                <h1>4</h1>
-                <p>Quality</p>
+                <h1><?= mysqli_num_rows($certificates);?></h1>
+                <p>No. of Certificates</p>
             </div>
             <div class="score-card">
-                <h1>4</h1>
-                <p>Quality</p>
+                <h1><?= $studentCount?></h1>
+                <p>No. of Students</p>
             </div>
-            <div class="score-card">
-                <h1>4</h1>
+            <!-- <div class="score-card">
+                <h1></h1>
                 <p>Quality</p>
-            </div>
+            </div> -->
             
 
-            <div class="text-container">
+            <!-- <div class="text-container">
                 <h6>Strengths</h6>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. A at necessitatibus, perferendis aut id dolore, commodi consectetur voluptates sed unde tempore labore, vero hic ipsam nesciunt maxime nobis explicabo. Recusandae earum aliquam inventore. Sed, illo?</p>
             </div>
@@ -38,7 +41,7 @@
                 <h6>Recommendation</h6>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. A at necessitatibus, perferendis aut id dolore, commodi consectetur voluptates sed unde tempore labore, vero hic ipsam nesciunt maxime nobis explicabo. Recusandae earum aliquam inventore. Sed, illo?</p>
             </div>
-            
+             -->
         </div>
     </div>
 
@@ -46,7 +49,8 @@
     <div class="summary-container d-flex flex-column">
         <h1>SUMMARY</h1>
         <div class="summary-score">
-            <h1>{{Score}}</h1>
+
+            <h1><?= getScaleOverallUser(getUsername())?></h1>
             <p>OVERALL RATING</p>
         </div>
         <p>

@@ -845,6 +845,35 @@ function getScaleOverall() {
     $averageScore = round($averageScore, 2);
     return $averageScore;
 }
+function getScaleOverallUser($id) {
+    $conn = connection();
+
+    $sql = "SELECT * FROM `form_response` WHERE `response_type` = 'scale' and `target_id` = $id";
+    $result = $conn->query($sql);
+
+    $totalScore = 0;
+    $totalResponses = 0;
+
+    while($row = $result->fetch_assoc()) {
+        // get all the scale responses from the json "value" key
+        $scaleResponses = json_decode($row['response_value'], true)['value'];
+        // print_r($scaleResponses);
+        //iterate through the nested json array
+        foreach($scaleResponses as $scaleResponse) {
+            foreach($scaleResponse as $key => $value){
+                $totalScore += $value;
+                $totalResponses++;
+            }
+        }
+    }
+    if($totalResponses != 0){
+        $averageScore = $totalScore / $totalResponses;
+    }else{
+        $averageScore = 0;
+    }
+    $averageScore = round($averageScore, 2);
+    return $averageScore;
+}
 function perScale($targetID, $formID, $observer = '*'){
     $conn = connection();
     $sql = "SELECT
@@ -1069,6 +1098,47 @@ function reportData($formID){
     $result = $conn->query($sql);
 
     return $result;
+}
+
+function studentCount($user_id){
+    $conn = connection();
+    $student_count = 0;
+  
+    $sql = "SELECT JSON_UNQUOTE(JSON_EXTRACT(data, '$.courses[*].professor')) AS faculty_name,
+     JSON_UNQUOTE(JSON_EXTRACT(data, '$.courses[*].course_code')) AS course_code,
+     JSON_UNQUOTE(JSON_EXTRACT(data, '$.courses[*].faculty_id')) AS faculty_id FROM 
+     student";
+  
+    $result = $conn->query($sql);
+  
+    if($result){
+      
+        while ($row = $result->fetch_assoc()) {
+            
+            //   $professorsArray = json_decode($row['faculty_name']); // Corrected variable name
+            $facultyID = json_decode($row['faculty_id']);
+            
+            foreach($facultyID as $id => $f_id){
+                if($user_id == $f_id){
+                    $student_count += 1;
+                }
+            }
+        }
+
+        return $student_count;
+    }
+      
+}
+
+function respodentcount($id){
+    $conn = connection();
+    $sql = "SELECT COUNT(*) as count FROM `evaluation` WHERE `target_id` = $id";
+
+    $result = $conn->query($sql);
+
+    $row = $result->fetch_assoc();
+    // print_r("row count is " . $row['count']);
+    return $row['count'];
 }
 
 ?>
