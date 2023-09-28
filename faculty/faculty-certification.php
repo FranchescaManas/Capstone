@@ -19,12 +19,12 @@ $certificates = certificateData($_SESSION['user_id']);
                 <div class="latest-certificate-container">
                     <div class="row">
                         <!-- certification logo -->
-                        <div class="col-3 py-4">
-                        <img src="data:image/jpeg;base64, <?= base64_encode($row['image'])?>" alt="" width="235px">
+                        <div class="col-4 py-2">
+                        <img src="data:image/jpeg;base64, <?= base64_encode($row['image'])?>" alt="" width="230px">
                             
                         </div>
 
-                        <div class="col-9 d-flex flex-column py-4" style="margin-left:-50px !important">
+                        <div class="col-7 d-flex flex-column py-4" style="margin-left:-50px !important">
                             <!-- certificate title -->
                             <h2><?= $row['title'] ?></h2>
                             <!-- certificate publisher -->
@@ -37,8 +37,8 @@ $certificates = certificateData($_SESSION['user_id']);
                                 
                             </div>
                         </div>
-                        <div class="col-1 d-flex justify-content-end align-items-start" style="position:relative !important">
-                            <div class="kebab-menu pt-2 pe-4" style="right: 0 !important">
+                        <div class="col-1 d-flex justify-content-end align-items-start py-2" style="position:relative !important">
+                            <div class="kebab-menu pt-2 pe-4" style="right: -45px !important">
                                 <img src="https://img.icons8.com/?size=512&id=84119&format=png" alt="Three Dots Icon" class="kebab-icon" width="25px">
                                 <ul class="kebab-options">
                                     <li>
