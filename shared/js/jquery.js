@@ -2,7 +2,6 @@
 $(document).ready(function () {
 
     if (isModifyMode) {
-        console.log('testetstsetsets');
         var fieldcounter = 0;
         $.each(data.form_pages, function (key, value) {
             var page_count = value.page_id;
@@ -177,7 +176,20 @@ $(document).ready(function () {
         var formGroup = $('<div>', {
             class: 'field-group',
             id: fieldcounter++
-        }).append(
+        });
+    
+        if (!isModifyMode) {
+            formGroup.append(
+                $("<img>", {
+                    class: 'field-group-remove',
+                    src: 'https://freesvg.org/img/1544641784.png',
+                    width: '20px',
+                    height: '20px'
+                })
+            );
+        }
+    
+        formGroup.append(
             $('<section>', { class: 'w-100' }).append(
                 $('<input>', {
                     type: 'text',
@@ -200,10 +212,9 @@ $(document).ready(function () {
                 ).val(selectedValue)
             )
         );
-
+    
         if (selectedValue === 'choice' || selectedValue === 'dropdown') {
             appendChoiceOptions(formGroup, selectedValue);
-
         } else if (selectedValue === 'date' || selectedValue === 'time') {
             appendDateOrTimeInput(formGroup, selectedValue);
         } else if (selectedValue === 'section' || selectedValue === 'page' || selectedValue === 'paragraph') {
@@ -214,8 +225,7 @@ $(document).ready(function () {
             appendTextboxInput(formGroup);
         }
         renameField(formGroup, selectedValue);
-
-
+    
         return formGroup;
     }
 
@@ -478,6 +488,28 @@ $(document).ready(function () {
         });
     
         $('#' + fieldGroupId + ' .form-option-container').append(added_option);
+    });
+    $('#form').on('click', '.field-group-remove', function () {
+        var fieldGroupId = $(this).closest('.field-group');
+        if(isModifyMode){
+            
+            // confirm('Are you sure you want to delete this question?');
+            // if(confirm){
+            //     fieldGroupId.remove();
+                
+            // }
+        }else{
+            fieldGroupId.remove();
+    
+            //adjust the id of the field group counter of each fields
+            fieldcounter = 0;
+            $('.field-group').each(function() {
+                $(this).attr('id', fieldcounter++);
+            });
+        }
+
+
+
     });
 
     // Uncommented code for generating scale label text boxes

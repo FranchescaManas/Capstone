@@ -369,6 +369,24 @@ function updateForm($formData)
         $formID = $formData['formid'];
     }
 
+    // $questionIds = array();
+    //     $questionIdsQuery = "SELECT question_id FROM form_question WHERE form_id = $formID";
+    //     $questionIdsResult = $conn->query($questionIdsQuery);
+    //     while ($row = $questionIdsResult->fetch_assoc()) {
+    //         $questionIds[] = $row['question_id'];
+    //     }
+
+    //     // Iterate through existing questions and delete if not in the request
+    //     foreach ($questionIds as $questionId) {
+    //         if (!isset($formData['questionIds']) || !in_array($questionId, $formData['questionIds'])) {
+    //             // Question ID not found in the request, delete the question
+    //             $deleteQuestionSql = "DELETE FROM form_question WHERE question_id = $questionId";
+    //             if (!$conn->query($deleteQuestionSql)) {
+    //                 echo "Error deleting question: " . $conn->error;
+    //             }
+    //         }
+    //     }
+
 
     // print_r($formData);
     foreach ($formData['data'] as $item) {

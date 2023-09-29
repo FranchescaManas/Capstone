@@ -46,8 +46,14 @@ body{
     padding: 15px 30px;
     flex-direction: column;
     margin: 25px auto;
+    position: relative;
 }
-
+.field-group-remove{
+    position: absolute;
+    right: -25px;
+    top: 0;
+    height: fit-content;
+}
 .field-question{
     width: 70%;
     min-height: 25px;
