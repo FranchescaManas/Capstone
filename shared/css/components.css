@@ -216,6 +216,7 @@ select#observation-role {
 .text-container{
     background-color: #cacaca;
     width: 96%;
+    /* height: 250px; */
     height: fit-content;
     max-height: 250px;
     margin: 25px;
@@ -223,6 +224,7 @@ select#observation-role {
     padding: 25px;
     overflow: auto;
 }
+
 
 .summary-score{
     width: 60%;

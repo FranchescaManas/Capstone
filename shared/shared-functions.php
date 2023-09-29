@@ -900,8 +900,10 @@ function perScale($targetID, $formID, $observer = '*'){
     return $result;
 }
 
-function getComments($targetID, $formID, $observer = '*'){
-    $conn = connection();
+function getComments($targetID, $formID, $role = null) {
+    $conn = connection(); // Assuming you have a function named 'connection' to establish a database connection
+
+    // Use prepared statements to prevent SQL injection
     $sql = "SELECT
                 fq.form_id,
                 fq.question_text AS question,
@@ -915,15 +917,38 @@ function getComments($targetID, $formID, $observer = '*'){
                 fq.form_id = fr.form_id
                 AND fq.question_id = fr.question_id
             WHERE
-                fq.question_type = 'paragraph'
-                AND fq.form_id = $formID
-                AND fr.target_id = $targetID
-                AND fr.response_type = 'scale'
-                " . ($observer !== "*" ? "AND `role` = '$observer'" : "") . ";"; 
+                fr.response_type = 'paragraph'
+                AND fq.form_id = ?
+                AND fr.target_id = ?
+                " . ($role !== null ? "AND `role` = ?" : "") . ";";
 
-    $result = $conn->query($sql);
-    return $result;
+    $stmt = $conn->prepare($sql);
+
+    if ($stmt) {
+        // Bind parameters
+        if ($role !== null) {
+            $stmt->bind_param("iis", $formID, $targetID, $role);
+        } else {
+            $stmt->bind_param("ii", $formID, $targetID);
+        }
+
+        // Execute the statement
+        $stmt->execute();
+
+        // Get the result set
+        $result = $stmt->get_result();
+
+        // Close the statement
+        $stmt->close();
+
+        // Return the result
+        return $result;
+    } else {
+        // Handle prepare error
+        return false;
+    }
 }
+
 function formPage($targetID){
     $conn = connection();
     $sql = "SELECT DISTINCT form_id, role

@@ -16,21 +16,29 @@ if (isset($_GET['fid'])) {
 
             <?php
 
-            $admin = formPage(getUsername());
+$admin = formPage(getUsername());
+$fid = $_GET['fid']; // Assuming $_GET['fid'] contains the form ID
 
-            while ($row = $admin->fetch_assoc()) {
-                $role = $row['role'];
-                $fid = $row['form_id'];
-                $role = strtolower($role);
-                if ($fid === $_GET['fid'])
-                    if ($role === 'dean') {
-                        echo '<select name="observation-role" id="observation-role" class="my-2">';
-                        echo "<option value='$role'>$role</option>";
-                        echo '</select>';
-                    } else {
-                        break;
-                    }
-            }
+// Define an array of allowed roles
+$allowedRoles = ['dean', 'vice-dean', 'department chair'];
+
+while ($row = $admin->fetch_assoc()) {
+    $role = strtolower($row['role']);
+    $currentFid = $row['form_id'];
+
+    // Check if the form ID matches the one from the URL
+    if ($currentFid === $fid) {
+        // Check if the role is one of the allowed roles
+        if (in_array($role, $allowedRoles)) {
+            // If it's an allowed role, add it as an option to the select
+            echo '<select name="observation-role" id="observation-role" class="my-2">';
+            echo "<option value='$role'>$role</option>";
+            echo '</select>';
+            break; // Exit the loop since we found a matching role
+        }
+    }
+}
+
 
             ?>
 
@@ -53,25 +61,19 @@ if (isset($_GET['fid'])) {
 
                 $maxScore = $row['number_of_labels'];
                 $maxScore = (int) $maxScore;
-                // echo 'max Score:' . $maxScore . '<br>';
                 $scaleScore = 0;
                 $scaleReponses = 0;
 
-                // echo $row['scale_text'] . '<br>';
-            
                 foreach ($scaleResponses as $scaleResponse) {
                     foreach ($scaleResponse as $key => $value) {
                         $scaleScore += $value;
                         $scaleReponses++;
-                        // echo "value: $value <br>";
                     }
                 }
 
                 $scaleAverage = $scaleScore / $scaleReponses;
-                // echo "scale average: $scaleAverage <br>";
                 $scalePercent = ($scaleAverage / $maxScore) * 100;
-                // echo "scale percent: $scalePercent <br>";
-            
+
                 // Store the scale score in the associative array
                 $scaleText = $row['scale_text'];
                 if (!isset($scaleScores[$scaleText])) {
@@ -80,16 +82,11 @@ if (isset($_GET['fid'])) {
                 }
                 $scaleScores[$scaleText] += $scalePercent;
                 $respondents[$scaleText]++; // Increment the respondent count for this scale
-                // echo "scale score: " . $scaleScores[$scaleText] . '<br>';
-                // $scaleScores[$scaleText] = round($scaleScores[$scaleText], 2);
-                // echo "scale score: " . $scaleScores[$scaleText] . '<br>';
-                // echo "scale response: $scaleReponses <br>";
-                // echo "computed average: $sAverage <br>";
-                // $scoreTotal += $scaleScores[$scaleText];
+            
             }
 
             // Loop through the associative array and display total scores and respondent counts for each scale
-           $questionCount = 0;
+            $questionCount = 0;
             foreach ($scaleScores as $scaleText => $totalScore) {
                 $questionCount++;
                 $sAverage = $totalScore / $respondents[$scaleText];
@@ -97,7 +94,7 @@ if (isset($_GET['fid'])) {
                 ?>
                 <div class="score-card">
                     <h1>
-                        <?= round($sAverage/20, 2)?>
+                        <?= round($sAverage / 20, 2) ?>
                     </h1>
                     <p>
                         <?= $scaleText ?>
@@ -111,15 +108,56 @@ if (isset($_GET['fid'])) {
 
 
 
+            <?php
 
-            <!-- <div class="text-container">
-                <h6>Strengths</h6>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. A at necessitatibus, perferendis aut id dolore, commodi consectetur voluptates sed unde tempore labore, vero hic ipsam nesciunt maxime nobis explicabo. Recusandae earum aliquam inventore. Sed, illo?</p>
-            </div>
-            <div class="text-container">
-                <h6>Recommendation</h6>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. A at necessitatibus, perferendis aut id dolore, commodi consectetur voluptates sed unde tempore labore, vero hic ipsam nesciunt maxime nobis explicabo. Recusandae earum aliquam inventore. Sed, illo?</p>
-            </div> -->
+
+            $comments = getComments(getUsername(), $formID);
+
+            // Initialize variables to track the current question and comments
+            $currentQuestion = null;
+            $currentComments = array();
+
+            while ($row = $comments->fetch_assoc()) {
+                $question = $row['question'];
+                $response = json_decode($row['response_value'], true)['value'];
+
+                // Check if the question has changed
+                if ($question !== $currentQuestion) {
+                    // If it has changed, display the previous comments in a single container
+                    if ($currentQuestion !== null) {
+                        echo '<div class="text-container">';
+                        echo '<h6>' . $currentQuestion . '</h6>';
+
+                        foreach ($currentComments as $comment) {
+                            echo '<p>' . $comment . '</p>';
+                        }
+
+                        echo '</div>';
+                    }
+
+                    // Update the current question and reset the comments array
+                    $currentQuestion = $question;
+                    $currentComments = array();
+                }
+
+                // Add the current response to the comments array
+                $currentComments[] = $response;
+            }
+
+            // Display the last set of comments
+            if ($currentQuestion !== null) {
+                echo '<div class="text-container">';
+                echo '<h6>' . $currentQuestion . '</h6>';
+
+                foreach ($currentComments as $comment) {
+                    echo '<p> ~ ' . $comment . '</p>';
+                }
+
+                echo '</div>';
+            }
+            ?>
+
+
 
         </div>
     </div>

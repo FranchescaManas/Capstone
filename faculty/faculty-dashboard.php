@@ -27,21 +27,7 @@
                 <h1><?= $studentCount?></h1>
                 <p>No. of Students</p>
             </div>
-            <!-- <div class="score-card">
-                <h1></h1>
-                <p>Quality</p>
-            </div> -->
             
-
-            <!-- <div class="text-container">
-                <h6>Strengths</h6>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. A at necessitatibus, perferendis aut id dolore, commodi consectetur voluptates sed unde tempore labore, vero hic ipsam nesciunt maxime nobis explicabo. Recusandae earum aliquam inventore. Sed, illo?</p>
-            </div>
-            <div class="text-container">
-                <h6>Recommendation</h6>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. A at necessitatibus, perferendis aut id dolore, commodi consectetur voluptates sed unde tempore labore, vero hic ipsam nesciunt maxime nobis explicabo. Recusandae earum aliquam inventore. Sed, illo?</p>
-            </div>
-             -->
         </div>
     </div>
 
