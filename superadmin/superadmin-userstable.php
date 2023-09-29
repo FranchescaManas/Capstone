@@ -41,7 +41,7 @@
         <section class="flex-center flex-wrap w-100">
             <input type="text" placeholder="search" id="txtbx_search" onkeyup="filterTable()" class="searchbox rounded-pill">
             <!-- <button class="rounded custom-btn">Filter</button> -->
-            <button class="rounded custom-btn">Import</button>
+            <!-- <button class="rounded custom-btn">Import</button> -->
         </section>
 
         <section class="flex-center">

@@ -16,7 +16,8 @@ function getUsername()
 function getRole()
 {
     return $_SESSION['role'];
-}function insertResponse($role, $formData)
+}
+function insertResponse($role, $formData)
 {
     $conn = connection();
     if (is_array($formData['form_id'])) {

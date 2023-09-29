@@ -430,13 +430,14 @@ table.user-table{
     width: 90%;
     height: fit-content;
     max-height: 250px;
-    min-height: 200px;
+    min-height: 150px;
     margin: 25px;
     background-color: #BEBEBE;
     border-radius: 25px;
     padding: 25px;
     overflow: auto;
     position: relative;
+
 }
 
 .form-card > p{

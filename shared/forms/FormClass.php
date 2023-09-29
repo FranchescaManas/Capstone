@@ -220,7 +220,7 @@ class Form
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 echo '
-                    <div class="form-card" id="' . $row['form_id'] . '">
+                    <div class="form-card d-flex flex-column justify-content-between" id="' . $row['form_id'] . '">
                         <div class="kebab-menu">
                             <img src="https://img.icons8.com/?size=512&id=84119&format=png" alt="Three Dots Icon" class="kebab-icon" width="25px">
                             <ul class="kebab-options">
@@ -232,7 +232,7 @@ class Form
                             </ul>
                         </div>
                         <h4>' . $row['form_name'] . '</h4>
-                        <p>' . $row['form_description'] . '</p>
+                        
     
                         <div class="d-flex justify-content-end">
                             <form action="../shared/forms/form.php" method="post">
