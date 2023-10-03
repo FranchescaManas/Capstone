@@ -25,10 +25,10 @@
                             <label for="end-date">Start Date:</label>
                             <input type="date" name="end-date" id="end-date" class="w-25">
                         </div>
-                        <form action="../shared/forms/event-listener.php" method="post">
+                        <!-- <form action="../shared/forms/event-listener.php" method="post">
                             <p>- or -</p>
                             <button type="submit" class="rounded w-25" name="submit" value="close form" >Close Forms</button>
-                        </form>
+                        </form> -->
                     </section>
 
                     <section class="d-flex flex-wrap m-3">

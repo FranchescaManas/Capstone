@@ -686,10 +686,18 @@ function userAddUpdate($request){
         VALUES 
         ('$username', '$hashed_password', '$firstname', '$lastname', '$email', $phone, '$role')";
     }else{
-        $sql = "UPDATE FROM users SET `username` = '$username', `password` = '$hashed_password', `firstname` = '$firstname',
-        `lastname` = $lastname, `email` = '$email', `phone` = '$phone' WHERE `user_id` = $userID";
+        $sql = "UPDATE users SET `username` = '$username', `password` = '$hashed_password', `firstname` = '$firstname',
+        `lastname` = '$lastname', `email` = '$email', `phone` = '$phone' WHERE `user_id` = $userID";
+
+        echo $sql;
     }
     $result = $conn->query($sql);
+    if(!$result){
+        die('Error inserting user' . $conn->error);
+    }else{
+        header('Location: ' . $_SERVER["HTTP_REFERER"] );
+        exit;
+    }
 
 
 }

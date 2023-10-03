@@ -100,9 +100,11 @@ if (isset($_GET['id'])) {
                                 echo '<input type="hidden" name="userID" value="'.$id.'">';
                             }
                             ?>
+                            <div class="d-flex w-100 justify-content-end">
 
-                            <button type="submit">Save</button>
-                            <button>Cancel</button>
+                                <button type="submit" class="rounded w-25 mx-2">Save</button>
+                                <!-- <button class="rounded w-25 mx-2">Cancel</button> -->
+                            </div>
                         </form>
 
                         <?php
