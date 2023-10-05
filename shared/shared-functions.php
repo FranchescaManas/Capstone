@@ -735,7 +735,7 @@ function userAddUpdate($request)
                         if (!$result) {
                             die('Error inserting user' . $conn->error);
                         } else {
-                            // header('Location: ' . $_SERVER["HTTP_REFERER"]);
+                            header('Location: ' . $_SERVER["HTTP_REFERER"]);
                             exit;
                         }
                     }
@@ -762,7 +762,7 @@ function userAddUpdate($request)
             if (!$result) {
                 die('Error inserting user' . $conn->error);
             } else {
-                // header('Location: ' . $_SERVER["HTTP_REFERER"]);
+                header('Location: ' . $_SERVER["HTTP_REFERER"]);
                 exit;
             }
         }
