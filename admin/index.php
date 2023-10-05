@@ -49,7 +49,7 @@ include '../shared/forms/FormClass.php';
             if( $page === 'user'){
                 include '../shared/user.php';
             }else{
-                include './superadmin-'.$page.'.php';
+                include './admin-'.$page.'.php';
             }
         }else{
             include '../shared/forms/form-view.php';

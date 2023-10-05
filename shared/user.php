@@ -1,4 +1,6 @@
 <?php
+include_once $_SERVER['DOCUMENT_ROOT'] . '/capstone2/shared/connection.php';
+
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
     $data = userData($id);
@@ -11,6 +13,16 @@ if (isset($_GET['id'])) {
         $username = $row['username'];
         $password = $row['password'];
         $role = $row['role'];
+        if($role === 'admin'){
+            $conn = connection();
+            $sql = "SELECT `admin_level` FROM admin WHERE `user_id` = $id";
+
+            $result = $conn->query($sql);
+            while($row = $result->fetch_assoc()){
+                $role = $row['admin_level'];
+            }
+        }
+        
     }
     $action = "update user";
 }else{
@@ -59,19 +71,7 @@ if (isset($_GET['id'])) {
                                 <small><a href="#">View Certifications</a></small>
                             <?php
                             }
-                            ?>
-                            <div class="d-flex">
-                            <p>Role:</p>
-                            <select name="role" id="role" class="mx-2 h-75%">
-                                <option value="dean">Super Admin</option>
-                                <option value="dean">Dean</option>
-                                <option value="dean">Vice-dean</option>
-                                <option value="dean">Department Chair</option>
-                                <option value="dean">Faculty</option>
-                            </select>
-                            </div>
-                           
-                            <?php
+                            
                         }
                         ?>
 
@@ -107,10 +107,44 @@ if (isset($_GET['id'])) {
                             </div>
                             <div class="form-group">
                                 <label for="password">Password</label>
-                                <input type="password" value="<?=$password?>" name="password" class="rounded-pill">
+                                <input type="password" value="" name="password" class="rounded-pill">
                             </div>
+                            <?php
+                            if(getRole() === 'superadmin'){
+                                if($role !== 'student'){
+                                ?>
+                            
+                                <div class="form-group">
+                                <label for="role">Role:</label>
+                                <select name="role" id="role" class="mx-2 rounded-pill p-1">
+                                    <?php
+                                    $roles = [
+                                        'superadmin' => 'Super Admin',
+                                        'dean' => 'Dean',
+                                        'vice dean' => 'Vice-dean',
+                                        'department chair' => 'Department Chair',
+                                        'faculty' => 'Faculty'
+                                    ];
+
+                                    foreach ($roles as $value => $label) {
+                                        $selected = ($role === $value) ? 'selected' : '';
+                                        echo "<option value=\"$value\" $selected>$label</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                                
+                                <?php
+                                }
+                            }else{
+                                ?>
+                            
+                                <input type="hidden" name="role" value="<?=$role?>">
+                                <?php
+                            }
+                            
+                            ?>
                             <input type="hidden" name="submit" value="<?=$action?>">
-                            <input type="hidden" name="role" value="<?=$role?>">
                             <?php
                             if(isset($id)){
                                 echo '<input type="hidden" name="userID" value="'.$id.'">';

@@ -664,7 +664,8 @@ function userData($userID='null'){
 
 }
 
-function userAddUpdate($request){
+function userAddUpdate($request)
+{
     // print_r($request);
     $conn = connection();
     $username = $request['username'];
@@ -673,31 +674,103 @@ function userAddUpdate($request){
     $email = $request['email'];
     $phone = $request['phone'];
     $pass = $request['password'];
-    $hashed_password = password_hash($pass, PASSWORD_DEFAULT);
+    $hashed_password = ''; // Initialize to an empty string
+
+    // Check if a new password is provided and hash it
+    if ($pass !== '') {
+        $hashed_password = password_hash($pass, PASSWORD_DEFAULT);
+    }
+
+   
     $role = $request['role'];
-    if(isset($request['userID'])){
+   
+    if (isset($request['userID'])) {
         $userID = $request['userID'];
     }
     $action = $request['submit'];
 
-    if($action === 'insert user'){
-
+    if ($action === 'insert user') {
         $sql = "INSERT INTO users (`username`, `password`, `firstname`, `lastname`, `email`, `phone`, `role`)
-        VALUES 
-        ('$username', '$hashed_password', '$firstname', '$lastname', '$email', $phone, '$role')";
-    }else{
-        $sql = "UPDATE users SET `username` = '$username', `password` = '$hashed_password', `firstname` = '$firstname',
-        `lastname` = '$lastname', `email` = '$email', `phone` = '$phone', `role` = '$role' WHERE `user_id` = $userID";
+                VALUES ('$username', '$hashed_password', '$firstname', '$lastname', '$email', $phone, '$role')";
+    } else {
+        if ($role === 'dean' || $role === 'vice dean' || $role === 'department chair') {
+            // Check if a user with the specified role already exists
+            $checkSql = "SELECT * FROM admin WHERE `admin_level` = '$role'";
+            $checkResult = $conn->query($checkSql);
 
-        echo $sql;
+            if ($checkResult->num_rows >= 1) {
+                // print_r($checkResult);
+                if($role === $checkResult->fetch_assoc()['admin_level']){
+                    $role = "admin";
+                }else{
+                    echo "Error: A user with the role '$role' already exists";
+                }
+            } else {
+                // Insert the user with the specified role into the admin table
+                $checker = "Select * from admin where `user_id` = $userID";
+                $checkResult = $conn->query($checker);
+                if($checkResult->num_rows >= 1){
+                    echo "User is already an admin";
+                }else{
+
+                    $adminSql = "INSERT INTO admin (`user_id`, `admin_level`) VALUES ($userID, '$role')";
+                    if (!$conn->query($adminSql)) {
+                        die('Error inserting admin: ' . $conn->error);
+                    } else {
+    
+                        $role = "admin";
+    
+    
+                        $sql = "UPDATE users SET `username` = '$username', ";
+                        
+                        // Only include password update if $hashed_password is not empty
+                        if ($hashed_password !== '') {
+                            $sql .= "`password` = '$hashed_password', ";
+                        }
+    
+                        $sql .= "`firstname` = '$firstname', `lastname` = '$lastname', `email` = '$email', 
+                        `phone` = '$phone', `role` = '$role' WHERE `user_id` = $userID";
+    
+                        $result = $conn->query($sql);
+                        if (!$result) {
+                            die('Error inserting user' . $conn->error);
+                        } else {
+                            // header('Location: ' . $_SERVER["HTTP_REFERER"]);
+                            exit;
+                        }
+                    }
+                }
+
+            }
+        } else {
+            if ($role !== 'admin') {
+                $removeSQL = "DELETE FROM admin WHERE `user_id` = $userID";
+                if (!$conn->query($removeSQL)) {
+                    die('Error removing admin: ' . $conn->error);
+                }
+            }
+            $sql = "UPDATE users SET `username` = '$username', ";
+            
+            // Only include password update if $hashed_password is not empty
+            if ($hashed_password !== '') {
+                $sql .= "`password` = '$hashed_password', ";
+            }
+
+            $sql .= "`firstname` = '$firstname', `lastname` = '$lastname', `email` = '$email', 
+            `phone` = '$phone', `role` = '$role' WHERE `user_id` = $userID";
+            $result = $conn->query($sql);
+            if (!$result) {
+                die('Error inserting user' . $conn->error);
+            } else {
+                // header('Location: ' . $_SERVER["HTTP_REFERER"]);
+                exit;
+            }
+        }
+
+
+
     }
-    $result = $conn->query($sql);
-    if(!$result){
-        die('Error inserting user' . $conn->error);
-    }else{
-        header('Location: ' . $_SERVER["HTTP_REFERER"] );
-        exit;
-    }
+
 
 
 }
