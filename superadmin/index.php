@@ -70,9 +70,16 @@ include '../shared/forms/FormClass.php';
     if(isset($_GET['page'])){
         $page = $_GET['page'];
         if($page !== 'forms'){
-            include './superadmin-'.$page.'.php';
-        }else{
+            if( $page === 'user'){
+                include '../shared/user.php';
+            }else{
+                include './superadmin-'.$page.'.php';
+            }
+        }
+        else{
+            
             include '../shared/forms/form-view.php';
+           
         }
     }
     

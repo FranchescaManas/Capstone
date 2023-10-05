@@ -51,10 +51,26 @@ if (isset($_GET['id'])) {
                             ?>
                             <small><a href="#">View Courses</a></small>
                             <?php
-                        } else if ($role === 'faculty') {
+                        } else {
+                            if ($role === 'faculty') {
                             ?>
+                            
                                 <small class="mt-3"><a href="#">View Courses</a></small>
                                 <small><a href="#">View Certifications</a></small>
+                            <?php
+                            }
+                            ?>
+                            <div class="d-flex">
+                            <p>Role:</p>
+                            <select name="role" id="role" class="mx-2 h-75%">
+                                <option value="dean">Super Admin</option>
+                                <option value="dean">Dean</option>
+                                <option value="dean">Vice-dean</option>
+                                <option value="dean">Department Chair</option>
+                                <option value="dean">Faculty</option>
+                            </select>
+                            </div>
+                           
                             <?php
                         }
                         ?>
@@ -87,7 +103,7 @@ if (isset($_GET['id'])) {
 
                             <div class="form-group">
                                 <label for="username">Username</label>
-                                <input type="text" value="<?=$username?>" name="username" class="rounded-pill">
+                                <input type="text" value="<?=$username?>" name="username" class="rounded-pill" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="password">Password</label>
@@ -100,9 +116,11 @@ if (isset($_GET['id'])) {
                                 echo '<input type="hidden" name="userID" value="'.$id.'">';
                             }
                             ?>
+                            <div class="d-flex w-100 justify-content-end">
 
-                            <button type="submit">Save</button>
-                            <button>Cancel</button>
+                                <button type="submit" class="rounded w-25 mx-2">Save</button>
+                                <!-- <button class="rounded w-25 mx-2">Cancel</button> -->
+                            </div>
                         </form>
 
                         <?php

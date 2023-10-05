@@ -6,7 +6,7 @@
 
         <section class="flex-center flex-wrap w-100">
             <input type="text" placeholder="search" id="txtbx_search" onkeyup="filterTable()" class="searchbox rounded-pill">
-            <button class="rounded custom-btn">Filter</button>
+            <!-- <button class="rounded custom-btn">Filter</button> -->
             <!-- <a href="./index.php?page=user&action=faculty">
                 <button class="rounded custom-btn">Add User</button>
             </a> -->

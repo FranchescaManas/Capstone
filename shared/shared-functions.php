@@ -687,7 +687,7 @@ function userAddUpdate($request){
         ('$username', '$hashed_password', '$firstname', '$lastname', '$email', $phone, '$role')";
     }else{
         $sql = "UPDATE users SET `username` = '$username', `password` = '$hashed_password', `firstname` = '$firstname',
-        `lastname` = '$lastname', `email` = '$email', `phone` = '$phone' WHERE `user_id` = $userID";
+        `lastname` = '$lastname', `email` = '$email', `phone` = '$phone', `role` = '$role' WHERE `user_id` = $userID";
 
         echo $sql;
     }

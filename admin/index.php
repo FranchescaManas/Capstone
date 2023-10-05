@@ -46,13 +46,16 @@ include '../shared/forms/FormClass.php';
     if(isset($_GET['page'])){
         $page = $_GET['page'];
         if($page !== 'forms'){
-            include './admin-'.$page.'.php';
+            if( $page === 'user'){
+                include '../shared/user.php';
+            }else{
+                include './superadmin-'.$page.'.php';
+            }
         }else{
             include '../shared/forms/form-view.php';
         }
     }
-    
-    // include './admin-'.$page.'.php';
+  
     ?>
     
     
