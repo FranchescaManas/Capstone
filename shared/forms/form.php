@@ -5,6 +5,10 @@ session_start();
 $userID = $_SESSION['user_id'];
 
 $role = strtolower($_SESSION['role']);
+// if($role === 'dean' || $role === 'vice dean' || $role === 'department chair'){
+//     $role = 'admin';
+// }
+
 
 
 ?>
@@ -48,96 +52,7 @@ $role = strtolower($_SESSION['role']);
     
     $form = new Form;
 
-    // if (isset($_POST['viewForm'])) 
-    // {
-    //     $formId = $_POST['viewForm'];
-    //     formContent($formId, $form);
-    // }
- 
-    // else 
-    // {
-    //     $formId = $form->getFormID($userID, $role);
 
-    //     if (isset($_POST['target_id'])) 
-    //     {
-    //         $targetID = $_POST['target_id'];
-
-    //         if (count($formId) === 1) 
-    //         {
-    //             $access = $form->checkAccess($formId[0], $role);
-    //             if(is_array($formId)){
-    //                 $formId = $formId[0];
-    //             }
-
-    //             if ($access === 'can access') {
-    //                 $formName = $form->getFormName($formId);
-    //                 formContent($formId, $form, 'evaluate');
-    
-    //             } else if ($access === 'can modify') {
-    //                 if($role === 'dean' || $role === 'vice-dean' || $role === 'chairperson'){
-    //                     $role = 'admin';
-    //                 }
-    //                 header('location: ../../' . $role . '/index.php?page=forms');
-    
-    //             } else {
-    //                 echo "no permission to forms";
-    //             }
-    //         }
-    //         else
-    //         {
-    //             if(isset($_POST['start_eval'])){
-
-    //                 $formId = $_POST['start_eval'];
-    //                 $formName = $form->getFormName($formId);
-    //                 formContent($formId, $form, 'evaluate');
-    //             }
-    //             else{
-    //                 if($role === 'dean' || $role === 'vice-dean' || $role === 'chairperson'){
-    //                     $role = 'admin';
-    //                 }
-    //                 header('location: ../../' . $role . '/index.php?page=forms');
-    //             }
-    //         }
-    //     } else {
-
-        
-    //         if($role === 'superadmin'){
-    //             header('location: ../../' . $role . '/index.php?page=forms');
-
-    //         }else{
-                
-    //             if(count($formId) > 1){
-    //                 if (isset($_POST['evaluateForm'])) 
-    //                 {
-    //                     $formId = $_POST['evaluateForm'];
-    //                     $formName = $form->getFormName($formId);
-                        
-                        
-    //                     header('location: ./targetForm.php?form=' . $formId);
-        
-    //                 }
-    //                 else
-    //                 {
-    //                     if($role === 'dean' || $role === 'vice-dean' || $role === 'chairperson'){
-    //                         $role = 'admin';
-    //                     }
-    //                     header('location: ../../' . $role . '/index.php?page=forms');
-    //                 }
-
-    //             }else{
-    //                 if(!isset($_POST['target_id'])){
-    //                     if(is_array($formId)){
-    //                         $formId = $formId[0];
-    //                     }
-    //                     header('location: ./targetForm.php?form=' . $formId);
-
-    //                 }                   
-    //             }
-                
-    //         }
-            
-    //     }
-        // print_r($_POST);
         if(isset($_POST['viewForm']))
         {
             $formId = $_POST['viewForm'];
@@ -204,7 +119,7 @@ $role = strtolower($_SESSION['role']);
                 }
                 else if($access === 'can modify')
                 {
-                    if($role === 'dean' || $role === 'vice-dean' || $role === 'department chair'){
+                    if($role === 'dean' || $role === 'vice dean' || $role === 'department chair'){
                         $role = 'admin';
                     }
                     // echo "redirect to admin page";
@@ -226,7 +141,7 @@ $role = strtolower($_SESSION['role']);
                 }
                 else
                 {
-                    if($role === 'dean' || $role === 'vice-dean' || $role === 'chairperson'){
+                    if($role === 'dean' || $role === 'vice dean' || $role === 'chairperson'){
                         $role = 'admin';
                     }
                     if(count($formId) > 1){
@@ -241,7 +156,7 @@ $role = strtolower($_SESSION['role']);
                         }
                         else
                         {
-                            if($role === 'dean' || $role === 'vice-dean' || $role === 'department chair'){
+                            if($role === 'dean' || $role === 'vice dean' || $role === 'department chair'){
                                 $role = 'admin';
                             }
                             header('location: ../../' . $role . '/index.php?page=forms');
