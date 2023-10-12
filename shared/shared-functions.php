@@ -1283,4 +1283,52 @@ function respodentcount($id){
     return $row['count'];
 }
 
+function deleteUser($id) {
+    $conn = connection();
+    
+    // Start a database transaction
+    $conn->begin_transaction();
+
+    try {
+        // Define an array of table names
+        $tables = ['form_response', 'evaluation', 'form_permission', 'faculty', 'certificate', 'student', 'admin', 'users'];
+        
+        foreach ($tables as $table) {
+            // Construct the DELETE query for each table
+            if($table!=='evaluation'){
+                $user = 'user_id';
+            }else{
+                $user = 'evaluator_id';
+            }
+            $sql = "DELETE FROM $table WHERE $user = ?";
+            $stmt = $conn->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing the DELETE statement for table $table.");
+            }
+
+            // Bind the parameter and execute the query
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+
+            // Close the prepared statement
+            $stmt->close();
+        }
+
+        // Commit the transaction if all deletions were successful
+        $conn->commit();
+        echo "User and related data deleted successfully.";
+        
+        // Close the database connection
+        $conn->close();
+    } catch (Exception $e) {
+        // Handle any exceptions and roll back the transaction on error
+        $conn->rollback();
+        echo "Error deleting user: " . $e->getMessage();
+    }
+}
+
+// Usage: Call deleteUser with the user's ID to delete the user and related data
+
+
 ?>

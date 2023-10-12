@@ -57,7 +57,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-        } else {
+        } 
+        else if(isset($_POST['delete_id'])){
+            deleteUser($_POST['delete_id']);
+        }
+            
+        else {
             $formData = json_decode($_POST['data'], true);
             $actionData = json_decode($_POST['action'], true);
 

@@ -5,9 +5,6 @@ session_start();
 $userID = $_SESSION['user_id'];
 
 $role = strtolower($_SESSION['role']);
-// if($role === 'dean' || $role === 'vice dean' || $role === 'department chair'){
-//     $role = 'admin';
-// }
 
 
 

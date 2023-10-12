@@ -1,28 +1,3 @@
-<!-- 
-    This page consists of 2 php files: student-navmenubar.php and by default - student-dashboard.php
-    This right side of this page dynamicall changes depending on the option that the user picks.
-
-    Notice that the url holds the value that current page is showing once option in sidemenu is clicked
-    example:
-    http://localhost/capstone2/student/index.php?page=dashboard
-
-    NEXT:
-    super-admin-navmenubar.php
-    student-dashboard.php
-    student-forms.php -> (THERE IS A CONDITION IN LOADING THIS PAGE: 
-        this will only be displayed if there are more than one forms assigned to students
-        see forms/form.php for the logic. Else, if there is only 1 form assigned to the user:
-        it will redirect directly to form.php and generate the form contents).
-
-
-    Previous:
-    ../login.php
-
-    INCLUSIONS:
-    ./shared/shared-functions.php -> to access functions
-    ./super-admin-modals.php -> holds the code for the pop up container for schedule form button and assign form 
-    button
- -->
 
 
 <?php
@@ -30,6 +5,7 @@ session_start();
 
 include '../shared/shared-functions.php';
 include '../shared/forms/FormClass.php';
+
 
 ?>
 <!DOCTYPE html>

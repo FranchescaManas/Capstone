@@ -40,8 +40,12 @@
 
         <section class="flex-center flex-wrap w-100">
             <input type="text" placeholder="search" id="txtbx_search" onkeyup="filterTable()" class="searchbox rounded-pill">
-            <!-- <button class="rounded custom-btn">Filter</button> -->
-            <!-- <button class="rounded custom-btn">Import</button> -->
+            <!-- <a href="./index.php?page=userstable&role=faculty"> -->
+                <!-- <button class="rounded custom-btn" data-bs-toggle="modal" data-bs-target="#importfaculty" id='import-faculty'>Add Faculty</button> -->
+            <!-- </a> -->
+            <!-- <a href="./index.php?page=userstable&role=student"> -->
+                <!-- <button class="rounded custom-btn" data-bs-toggle="modal" data-bs-target="#importstudent" id='import-student'>Add Student</button> -->
+            <!-- </a> -->
         </section>
 
         <section class="flex-center">
@@ -53,6 +57,7 @@
                         <th>Last Name</th>
                         <th>Email</th>
                         <th>Role</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -72,6 +77,18 @@
                             <td><?= $row['lastname']?></td>
                             <td><?= $row['email']?></td>
                             <td><?= $row['role']?></td>
+                            <td>
+                                <div class="row">
+                                    <div class="col-6">
+                                    <a href="./index.php?page=user&id=<?= $row['user_id']?>">
+                                        <button class="btn btn-outline-warning">edit</button>
+                                    </a>
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="delete-user btn btn-outline-danger" value="<?= $row['user_id']?>">delete</button>
+                                    </div>
+                                </div>
+                                </td>
                         </tr>
                             <?php
                         }       
@@ -82,6 +99,27 @@
             </table>
         </section>
     </section>
-
     
 </main>
+
+
+<script>
+    $('.delete-user').on('click', function(){
+        var id = $(this).val();
+        if (confirm('Are you sure you want to permanently delete this user?')) {
+            $.ajax({
+                url: '../shared/forms/event-listener.php',
+                method: 'POST',
+                data: { delete_id: id },
+                success: function(data) {
+                    alert(data);
+                    location.reload();
+                }
+            });
+        } else {
+        }
+    });
+</script>
+
+
+

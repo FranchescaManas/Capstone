@@ -1,5 +1,7 @@
 <?php
 if(isset($_GET['page'])){
+    
+
     $role = $_GET['page'];
 
     if($role === 'students'){
@@ -10,10 +12,9 @@ if(isset($_GET['page'])){
         $role = 'faculty';
         $file = '../import-template/Faculty Template 1.xlsx';
         $filename = "Faculty Template";
-
     }
+    
 }
-
 
 ?>
 <head>
