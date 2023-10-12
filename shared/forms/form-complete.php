@@ -94,6 +94,9 @@ $role= $_SESSION['role'];
                 
             }
             elseif(isset($_POST['return'])){ 
+                if($role === 'dean' || $role === 'vice dean' || $role === 'department chair'){
+                    $role = 'admin';
+                }
                 header('location: ../../'.$role.'/index.php?page=dashboard');
             }
 

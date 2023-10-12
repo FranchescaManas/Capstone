@@ -34,23 +34,27 @@
         $formcount = $form->getFormID($_SESSION['user_id'], $_SESSION['role']);
         $formPage = formPage(getUsername());
 
+        $displayedFormIds = array(); // Array to keep track of displayed form IDs
+
         while ($row = $formPage->fetch_assoc()) {
-            //if row is not empty
-            if(!empty($row)){
-                $formId = $row['form_id'];
+            $formId = $row['form_id'];
+
+            // Check if the form_id has already been displayed
+            if (!in_array($formId, $displayedFormIds)) {
                 $formName = getFormName($formId);
                 $formName = strtolower($formName);
+
+                // Display the link and add the form_id to the displayed array
                 ?>
                 <li class="sidebar-item">
                     <a href="./index.php?page=result&fid=<?=$formId?>"><?=$formName?></a>
                 </li>
                 <?php
+
+                $displayedFormIds[] = $formId;
             }
-            else{
-                break;
-           }
-                
         }
+
 
 
 

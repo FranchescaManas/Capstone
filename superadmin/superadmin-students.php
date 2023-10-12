@@ -77,11 +77,11 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/capstone2/shared/shared-functions.php
                             <div class="row">
                                 <div class="col-6">
                                 <a href="./index.php?page=user&id=<?= $row['user_id']?>">
-                                    <button class="btn btn-outline-warning">edit</button>
+                                    <button class="btn btn-warning">edit</button>
                                 </a>
                                 </div>
                                 <div class="col-6">
-                                    <button class="delete-user btn btn-outline-danger" value="<?= $row['user_id']?>">delete</button>
+                                    <button class="delete-user btn btn-danger" value="<?= $row['user_id']?>">delete</button>
                                 </div>
                             </div>
                         </td>

@@ -20,33 +20,35 @@ $admin = formPage(getUsername());
 $fid = $_GET['fid']; // Assuming $_GET['fid'] contains the form ID
 
 // Define an array of allowed roles
-$allowedRoles = ['dean', 'vice-dean', 'department chair'];
-
-while ($row = $admin->fetch_assoc()) {
-    $role = strtolower($row['role']);
-    $currentFid = $row['form_id'];
-
-    // Check if the form ID matches the one from the URL
-    if ($currentFid === $fid) {
-        // Check if the role is one of the allowed roles
-        if (in_array($role, $allowedRoles)) {
-            // If it's an allowed role, add it as an option to the select
-            echo '<select name="observation-role" id="observation-role" class="my-2">';
-            echo "<option value='$role'>$role</option>";
-            echo '</select>';
-            break; // Exit the loop since we found a matching role
-        }
-    }
-}
-
-
-            ?>
+// $allowedRoles = ['dean', 'vice dean', 'department chair'];
+// print_r($admin->fetch_assoc());
+// echo '<select name="observation-role" id="observation-role" class="my-2">';
+// while ($row = $admin->fetch_assoc()) {
+//     // print_r($row['role']);
+//     // Check if the form ID matches the one from the URL
+//     $currentFid = $row['form_id'];
+//     if ($currentFid === $fid) {
+//         $role = strtolower($row['role']);
+//         // print_r($row);
+//         // Check if the role is one of the allowed roles
+//         if (in_array($role, $allowedRoles)) {
+//             // If it's an allowed role, add it to the matchingRoles array
+//             echo "<option value='$role'>$role</option>";
+//         }
+//     }
+// }
+// echo '</select>';
+//             ?>
 
 
 
         </div>
         <div class="d-flex flex-wrap justify-content-between">
             <?php
+            // if(isset($observationRole)){
+            //     $scores = perScale(getUsername(), $formID, $observationRole);
+            // }else{
+            // }
             $scores = perScale(getUsername(), $formID);
             $scaleScores = array(); // Create an associative array to store scale scores
             

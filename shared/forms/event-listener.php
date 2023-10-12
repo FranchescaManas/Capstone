@@ -8,11 +8,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $action = $_POST['submit'];
         if ($action === 'insert user' || $action === 'update user') {
             userAddUpdate($_POST);
+            header('Location: ' . $_SERVER["HTTP_REFERER"]);
+            exit;
         } else if ($action === 'upload certificate') {
             certificateAddUpdate($_POST);
             // go back 1 page and refresh
             header('Location:' . $_SERVER['HTTP_REFERER']);
-            ;
             exit;
         } else if ($action === 'delete certificate') {
             // echo "kjfsld";
