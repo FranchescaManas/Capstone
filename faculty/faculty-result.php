@@ -19,26 +19,7 @@ if (isset($_GET['fid'])) {
 $admin = formPage(getUsername());
 $fid = $_GET['fid']; // Assuming $_GET['fid'] contains the form ID
 
-// Define an array of allowed roles
-// $allowedRoles = ['dean', 'vice dean', 'department chair'];
-// print_r($admin->fetch_assoc());
-// echo '<select name="observation-role" id="observation-role" class="my-2">';
-// while ($row = $admin->fetch_assoc()) {
-//     // print_r($row['role']);
-//     // Check if the form ID matches the one from the URL
-//     $currentFid = $row['form_id'];
-//     if ($currentFid === $fid) {
-//         $role = strtolower($row['role']);
-//         // print_r($row);
-//         // Check if the role is one of the allowed roles
-//         if (in_array($role, $allowedRoles)) {
-//             // If it's an allowed role, add it to the matchingRoles array
-//             echo "<option value='$role'>$role</option>";
-//         }
-//     }
-// }
-// echo '</select>';
-//             ?>
+         ?>
 
 
 
